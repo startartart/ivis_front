@@ -1,0 +1,35 @@
+.Main {
+    /* center position */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* size */
+    width: 400px;
+    height: 400px;
+    /* background */
+    background-color: #fff;
+    /* border */
+    border: 1px solid #000;
+}
+
+.Nav {
+    /* size */
+    width: 100%;
+    height: 50px;
+    /* background */
+    background-color: #000;
+    /* border */
+    border-bottom: 1px solid #fff;
+
+    /* text */
+    color: #fff;
+    font-size: 20px;
+    text-align: center;
+    line-height: 50px;
+}
+
+.Nav :hover {
+    background-color: #fff;
+    color: #000;
+}
