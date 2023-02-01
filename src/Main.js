@@ -1,6 +1,4 @@
 import React from 'react';
-import './Main.css';
-import { FaBeer } from 'react-icons/fa';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Welcome from './pages/Welcome';
 import MainForm from './pages/MainForm';
