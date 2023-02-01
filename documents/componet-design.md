@@ -1,10 +1,13 @@
 # Components Design
 
 * Main
-    * Pages (MainForm, Guest, Login, SignUp ...)
+    * Pages (MainForm)
         * Header
             * MainNavBar
         * Logo
         * About
         * Services
         * Footer
+    * Pages (Welcome)
+        * WelcomeForm
+        * SignUpForm
