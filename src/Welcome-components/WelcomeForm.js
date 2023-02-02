@@ -84,18 +84,18 @@ const WelcomeForm = ({showApp, login, guest, take}) => {
     const [disappear, setDisappear] = useState(showApp);
 
     const takeHandler = (e) => {
-        setDisappear(!disappear);
+        if (e.target.id === 1)
+            setDisappear(!disappear);
         take(e.target.id);
     }
-
 
     return (
         <>
             <WelcomeText>IVIS</WelcomeText>
             <CheckTextBox>
-            <CheckText disappear={showApp} number={1} id={1} onClick={takeHandler}>2023 신입부원 모집</CheckText>
-            <CheckText disappear={showApp} number={2} id={2} onClick={takeHandler}>Main page</CheckText>
-            <CheckText disappear={showApp} number={3} id={3} onClick={takeHandler}>About</CheckText>
+            <CheckText disappear={showApp} id={1} onClick={takeHandler}>2023 신입부원 모집</CheckText>
+            <CheckText disappear={showApp} id={2} onClick={takeHandler}>Main page</CheckText>
+            <CheckText disappear={showApp} id={3} onClick={takeHandler}>About</CheckText>
             </CheckTextBox>
         </>
     );
