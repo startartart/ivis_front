@@ -13,6 +13,18 @@ const MainFragment = styled.div`
     height: 100%;
     background-color: #fff;
     border: 1px solid #000;
+
+    //appear animation for the Frame
+    animation: appear 1s ease-in-out;
+    @keyframes appear {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+    
 `;
 
 const MainForm = () => {
