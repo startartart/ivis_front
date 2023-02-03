@@ -92,17 +92,16 @@ const SignUpFormFragment = styled.div`
             }
         }
     `}
-
-    ${props => props.status === 5 && `
-        border: 3px solid #C9F6FF;
-        animation: progress 0.5s ease-in-out forwards;
+    ${props => props.status === 6 && `
+        border: 3px solid #35D6ED;
+        animation: progress 2s ease-in-out forwards;
 
         @keyframes progress {
             from {
-                border: 3px solid #C9F6FF;
+                border: 3px solid #35D6ED;
             }
             to {
-                border: 3px solid #35D6ED;
+                border: 3px solid #C9F6FF;
             }
         }
     `}
@@ -154,6 +153,7 @@ const Label = styled.label`
 
     ${props => props.value && `
         display: block;
+        font-weight: bold;
     `}
 `;
 
@@ -256,9 +256,9 @@ const SignUpForm = ({showApp, take}) => {
                 </>
             )}
             {check >= 1 && (
-                <InputBox>
+                <>
                     {check === 1 && (
-                        <>
+                        <InputBox>
                             <Input 
                                 type="text" 
                                 name="name"
@@ -272,10 +272,10 @@ const SignUpForm = ({showApp, take}) => {
                                     <FontAwesomeIcon icon={faArrowRight} />
                             </ContinueButton>
                             <Label>이름</Label>
-                        </>
+                        </InputBox>
                     )}
                     {check === 2 && (
-                        <>
+                        <InputBox>
                             <Input
                                 type="text"
                                 name="phone"
@@ -289,10 +289,10 @@ const SignUpForm = ({showApp, take}) => {
                                     <FontAwesomeIcon icon={faArrowRight} />
                             </ContinueButton>
                             <Label>전화번호</Label>
-                        </>
+                        </InputBox>
                     )}
                     {check === 3 && (
-                        <>
+                        <InputBox>
                             <Input
                                 type="text"
                                 name="studentNumber"
@@ -306,10 +306,10 @@ const SignUpForm = ({showApp, take}) => {
                                     <FontAwesomeIcon icon={faArrowRight} />
                             </ContinueButton>
                             <Label>학번</Label>
-                        </>
+                        </InputBox>
                     )}
                     {check === 4 && (
-                        <>
+                        <InputBox>
                             <Input
                                 type="password"
                                 name="password"
@@ -323,15 +323,29 @@ const SignUpForm = ({showApp, take}) => {
                                     <FontAwesomeIcon icon={faArrowRight} />
                             </ContinueButton>
                             <Label>비밀번호</Label>
-                        </>
+                        </InputBox>
                     )}
                     {check === 5 && (
                         <>
-                            <Label value={true} onClick={closeHandler}>신청이 완료되었습니다.</Label>
+                            <p>입력하신 정보가 맞는지 확인해주세요.</p>
+                            <p>이름: {name}</p>
+                            <p>전화번호: {phone}</p>
+                            <p>학번: {studentNumber}</p>
+                            <p>비밀번호(클릭 시 확인 가능): {password.replace(/./g, "*")}</p>
+                            <ButtonBox>
+                                <Button onClick={ContinueHandler}>YES</Button>
+                                <Button onClick={closeHandler}>NO</Button>
+                            </ButtonBox>
                         </>
                     )}
-            
-                </InputBox>
+                    {check === 6 && (
+                        <>
+                            <InputBox>
+                                <Label value={true} onClick={closeHandler} >신청이 완료되었습니다.</Label>
+                            </InputBox>
+                        </>
+                    )}
+                </>
             )}
         </SignUpFormFragment>
     );
