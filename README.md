@@ -10,6 +10,7 @@
     * 22.02.01 : pages(Welcome) component
     * 22.02.02 : SignUpForm Component - 4 levels (name, phone ...) information input
         * 컴포넌트, 페이지 및 Context를 통한 정리가 필요함
+    * 22.02.03 : SignUpForm Component - Check Info, SimpleGame
 
 * Install pacakge `npm install ...`
     * `react-router-dom`
