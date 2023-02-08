@@ -18,6 +18,10 @@ const SignUpFormFragment = styled.div`
     background: white;
     box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.2);
 
+    ${props => props.control && `
+        top: ${props.control}px;
+    `}
+
     //appear left to right
     animation: appear 1.0s ease-in-out;
 
@@ -44,64 +48,6 @@ const SignUpFormFragment = styled.div`
             to {
                 opacity: 0;
                 transform: translate(-50%, -50%) scale(0.5);
-            }
-        }
-    `}
-
-    //props.status is border prgressive animation
-    ${props => props.status === 1 && `
-        border: 3px solid #35D6ED;
-    `}
-    ${props => props.status === 2 && `
-        border: 3px solid #35D6ED;
-        animation: progress 0.5s ease-in-out forwards;
-
-        @keyframes progress {
-            from {
-                border: 3px solid #35D6ED;
-            }
-            to {
-                border: 3px solid #C9F6FF;
-            }
-        }
-    `}
-    ${props => props.status === 3 && `
-        border: 3px solid #C9F6FF;
-        animation: progress 0.5s ease-in-out forwards;
-
-        @keyframes progress {
-            from {
-                border: 3px solid #C9F6FF;
-            }
-            to {
-                border: 3px solid #35D6ED;
-            }
-        }
-    `}
-
-    ${props => props.status === 4 && `
-        border: 3px solid #35D6ED;
-        animation: progress 0.5s ease-in-out forwards;
-
-        @keyframes progress {
-            from {
-                border: 3px solid #35D6ED;
-            }
-            to {
-                border: 3px solid #C9F6FF;
-            }
-        }
-    `}
-    ${props => props.status === 6 && `
-        border: 3px solid #35D6ED;
-        animation: progress 2s ease-in-out forwards;
-
-        @keyframes progress {
-            from {
-                border: 3px solid #35D6ED;
-            }
-            to {
-                border: 3px solid #C9F6FF;
             }
         }
     `}
@@ -186,7 +132,7 @@ const Input = styled.input`
         &::placeholder {
             color: transparent;
         }
-        border-bottom-color: #11998e;
+        border-bottom-color: #333333;
     }
 
     &:focus ~ ${Label} {
@@ -195,7 +141,7 @@ const Input = styled.input`
         display: block;
         transition: 0.5s;
         font-size: 1rem;
-        color: #11998e;
+        color: #333333;
     }
 `;
 
@@ -204,11 +150,10 @@ const InputBox = styled.div`
     padding: 15px 0 0;
     margin-top: 10px;
     width: 10rem;
-
 `;
 
-const SignUpForm = ({showApp, take}) => {
-    const [disappear, setDisappear] = useState(showApp);
+const SignUpForm = ({showApp, take, control}) => {
+    const [disappear, setDisappear] = useState(true);
     const [inputs, setInputs] = useState({
         name: "",
         phone: "",
@@ -217,6 +162,7 @@ const SignUpForm = ({showApp, take}) => {
     });
     const [check, setCheck] = useState(0);
     const { name, phone, studentNumber, password } = inputs;
+    const [passwordCheck, setPasswordCheck] = useState(false);
 
     const onChange = (e) => {
         const { value, name } = e.target;
@@ -242,8 +188,17 @@ const SignUpForm = ({showApp, take}) => {
         setCheck(check + 1);
     }; 
 
+    const handleCheckPasswordOver = () => {
+       setPasswordCheck(true);
+    };
+
+    const handleCheckPasswordLeave = () => {
+        setPasswordCheck(false);
+    };
+
+
     return (
-        <SignUpFormFragment disapper={!disappear} status={check}>
+        <SignUpFormFragment disapper={!disappear} status={check} control={control}>
             
             {check === 0 && (
                 <>
@@ -331,7 +286,7 @@ const SignUpForm = ({showApp, take}) => {
                             <p>이름: {name}</p>
                             <p>전화번호: {phone}</p>
                             <p>학번: {studentNumber}</p>
-                            <p>비밀번호(클릭 시 확인 가능): {password.replace(/./g, "*")}</p>
+                            <p onMouseOver={handleCheckPasswordOver} onMouseLeave={handleCheckPasswordLeave}>비밀번호: {passwordCheck ? password : password.replace(/./g, "*")}</p>
                             <ButtonBox>
                                 <Button onClick={ContinueHandler}>YES</Button>
                                 <Button onClick={closeHandler}>NO</Button>
@@ -339,11 +294,9 @@ const SignUpForm = ({showApp, take}) => {
                         </>
                     )}
                     {check === 6 && (
-                        <>
-                            <InputBox>
-                                <Label value={true} onClick={closeHandler} >신청이 완료되었습니다.</Label>
-                            </InputBox>
-                        </>
+                        <InputBox>
+                            <Label value={true} onClick={closeHandler} >신청이 완료되었습니다.</Label>
+                        </InputBox>
                     )}
                 </>
             )}

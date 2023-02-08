@@ -11,11 +11,6 @@ const WelcomeText = styled.p`
     position: absolute;
     top: 2.5%;
     left: 20%;
-    &:hover {
-        background: -webkit-linear-gradient(#C9F6FF, #35D6ED);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
     //hover animation
     animation: pulse 2s infinite;
     @keyframes pulse {
@@ -29,6 +24,13 @@ const WelcomeText = styled.p`
             transform: scale(1);
         }
     }
+
+    ${props => props.status && `
+        background: linear-gradient(#434343, #000);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    `}
+
 `;
 
 const CheckText = styled.p`
@@ -38,20 +40,12 @@ const CheckText = styled.p`
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     
-    /* &:hover {
-        animation: slide_left_right 1s infinite;
-        @keyframes slide_left_right {
-            0% {
-                transform: translateX(0);
-            }
-            50% {
-                transform: translateX(50px);
-            }
-            100% {
-                transform: translateX(0);
-            }
-        }
-    } */
+    &:hover {
+        //color
+        background: linear-gradient(to right, #434343 0%, black 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
 
     //disappear is true then scatter
     ${props => props.disappear && `
@@ -77,21 +71,18 @@ const CheckTextBox = styled.div`
     transform: translate(-50%, -50%);
     width: 350px;
     height: 250px;
+
 `;
 
 const WelcomeForm = ({showApp, login, guest, take}) => {
 
-    const [disappear, setDisappear] = useState(showApp);
-
     const takeHandler = (e) => {
-        if (e.target.id === 1)
-            setDisappear(!disappear);
         take(e.target.id);
     }
 
     return (
         <>
-            <WelcomeText>IVIS</WelcomeText>
+            <WelcomeText status={showApp}>IVIS</WelcomeText>
             <CheckTextBox>
             <CheckText disappear={showApp} id={1} onClick={takeHandler}>2023 신입부원 모집</CheckText>
             <CheckText disappear={showApp} id={2} onClick={takeHandler}>Main page</CheckText>
