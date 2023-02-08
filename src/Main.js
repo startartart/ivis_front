@@ -6,7 +6,6 @@ import SignUp from './pages/SignUp';
 import Login from './pages/Login';
 import Guest from './pages/Guest';
 
-
 function Main() {
   return (
     <>
