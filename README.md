@@ -13,7 +13,11 @@
     * 22.02.03 : SignUpForm Component - Check Info, SimpleGame
     * 22.02.08 : Rebuilding Component & SignUpForm Component recycle
         * 향후 Context를 사용한 정리가 필요함
-
+    * 22.02.09 : Rebuilding Component(Welcome, SignUpForm) & RegisterContext
+        * 컴포넌트 정리 (Main -> App, MainForm -> Main, Welcome 수정 등)
+        * 폰트 추가, 로고 삽입, 사용하지 않는 컴포넌트 제거
+        * css animation 공부가 필요함
+        
 * Install pacakge `npm install ...`
     * `react-router-dom`
         * 전반적 페이지 라우팅, 링킹
