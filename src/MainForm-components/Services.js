@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import styled from 'styled-components';
-import SignUpForm from '../Welcome-components/SignUpForm';
+import SignUpForm from '../share-components/SignUpForm';
 
 const ServicesFragment = styled.div`
     position: relative;
