@@ -1,99 +1,148 @@
-import React, { useState } from 'react';
-import WelcomeForm from '../Welcome-components/WelcomeForm';
-import SignUpForm from '../Welcome-components/SignUpForm';
-import ParticleBackground from 'react-particle-backgrounds'
-import MainForm from './MainForm';
+import React, {useState} from 'react';
+import "./Welcome.scss";
 import styled from 'styled-components';
+import { useRegisterState, useRegisterDispatch } from '../contexts/RegisterContext';
+import SignUpForm from '../share-components/SignUpForm';
 
-const SlidingDiv = styled.div`
-    position: relative;
-    width: 100%;
-    height: 100%;
-    background-color: #fff;
-    margin: 0;
+const SignatureTitleFragment = styled.div`
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+`;
 
-    ${props => props.status && `
-        animation: slideDown 1s ease-in-out;
-    `}
+const TextFragment = styled.div`
+    font-size: 4rem;
+    display: flex;
+	position: absolute;
+    top: 30%;
+	left: 50%;
+	transform: translateX(-50%);
+	user-select: none;
+`;
 
-    @keyframes slideDown {
-        0% {
-            transform: translateY(0%);
+const Letter = styled.div`
+    transition: ease-out 1s;
+	transform: translateY(40%);
+`;
+
+const Shadow = styled.div`
+    transform: scale(1, -1);
+	color: #999;
+	transition: ease-in 0.5s, ease-out 0.5s;
+`;
+
+const WrapperFragment = styled.div`
+
+    padding: 0 0.2rem;
+
+    &:hover {
+        ${Letter} {
+            transform: translateY(-50%);
         }
-        100% {
-            transform: translateY(-100%);
+        ${Shadow} {
+            opacity: 0;
+			transform: translateY(50%);
         }
     }
 `;
 
-const settings = {
-    canvas: {
-        height: 800,
-      },
-    particle: {
-        canvasFillSpace: true,
-        height: 340,
-        particleCount: 10,
-        color: "#35D6ED",
-        minSize: 1,
-        maxSize: 7,
-    },
-    velocity: {
-        directionAngle: 0,
-        directionAngleVariance: 40,
-        minSpeed: 0.5,
-        maxSpeed: 1
-    },
-    opacity: {
-        minOpacity: 0,
-        maxOpacity: 0.5,
-        opacityTransitionTime: 4000
-    }
-  }
+const UpdateText = styled.div`
+    padding: 0 0.2rem;
+    @keyframes blink {
+            0% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
 
+    ${props => props.status === 'new' && `
+        color: red;
+        animation: blink 1s ease-in-out infinite;
+    `}
+
+    ${props => props.status === 'update' && `
+        color: blue;
+    `}
+
+    ${props => props.status === 'incomplete' && `
+        color: green;
+        text-decoration: line-through;
+    `}
+
+`;
 
 const Welcome = () => {
-    const [showApp, setShowApp] = useState(false);
-    const [login, setLogin] = useState(false);
-    const [gomain, setGoMain] = useState(false);
+    // 애니메이션 디스플레이 차후 수정
+    const [display, setDisplay] = useState(true);
+    const [animation, setAnimation] = useState('wait');
 
-    const take = async (e) => {
-        if (e === "1") {
-            //toggle showApp
-            settings.particle.color = "#000";
-            setShowApp(!showApp);
-        } else if (e === "2") {
-            //go to MainForm page
-            setGoMain(true);
-            //5ms after Guest true
-            setTimeout(() => {
-                setLogin(true);
-            }, 1000);
-        } else if (e === "3") {
-            setGoMain(true);
-        }
+    const state = useRegisterState();
+    const dispatch = useRegisterDispatch();
+
+    const onOpenHandler = (e) => {
+        e.preventDefault();
+        if (state.show) return;
+        dispatch({ type: 'TOGGLE_FORM' });
     }
 
-    if (showApp) {
-        settings.particle.color = "#000";
-    } else {
-        settings.particle.color = "#35D6ED";
+    const goMainHandler = async () => {
+        setAnimation('go');
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setDisplay(false);
     }
 
-      
     return (
-        <>
-            {!login &&
-                <SlidingDiv status={gomain}>
-                    <ParticleBackground settings={settings}/>
-                    <WelcomeForm showApp={showApp} login={login} gomain={gomain} take={take}/>
-                    {showApp && <SignUpForm showApp={showApp} take={take} />}
-                </SlidingDiv>
-            }
-            
-            {login && <MainForm />}
-        </>
-
+        // display ? (
+        // <AllWrapperFragment status={animation}>
+        <div className="background">
+            <SignatureTitleFragment>
+                <TextFragment>
+                    <WrapperFragment>
+                        <Letter>I</Letter>
+                        <Shadow>I</Shadow>
+                    </WrapperFragment>
+                    <WrapperFragment>
+                        <Letter>V</Letter>
+                        <Shadow>V</Shadow>
+                    </WrapperFragment>
+                    <WrapperFragment>
+                        <Letter>I</Letter>
+                        <Shadow>I</Shadow>
+                    </WrapperFragment>
+                    <WrapperFragment>
+                        <Letter>S</Letter>
+                        <Shadow>S</Shadow>
+                    </WrapperFragment>
+                </TextFragment>
+            </SignatureTitleFragment>
+            <div className="center-center">
+                <a href="#javascript" className="btn-glitch-fill" onClick={onOpenHandler}>
+                    <span className="text"><UpdateText status={'new'}>[new]</UpdateText>2023 신입부원 모집</span>
+                    <span className="text-decoration">_</span>
+                    <span className="decoration">&rArr;</span>
+                </a>
+                <a href="#javascript" className="btn-glitch-fill" onClick={goMainHandler}>
+                    <span className="text"><UpdateText status={'incomplete'}>[incomplete]</UpdateText>메인 페이지</span>
+                    <span className="text-decoration">_</span>
+                    <span className="decoration">&rArr;</span>
+                </a>
+                <a href="#javascript" className="btn-glitch-fill">
+                    <span className="text"><UpdateText status={'incomplete'}>[incomplete]</UpdateText>자료실</span>
+                    <span className="text-decoration">_</span>
+                    <span className="decoration">&rArr;</span>
+                </a>
+            </div>
+            {state.show && <SignUpForm/>}
+            <img className="logo" src="./images/ivis-logo36.png" alt="logo" />
+        </div>
+        // </AllWrapperFragment>
+        // ) : null
     );
 }
 

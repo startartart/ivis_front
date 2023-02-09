@@ -1,0 +1,152 @@
+@font-face {
+    font-family: "DOSBold";
+    src: url("../fonts/DOSIyagiBoldface.ttf") format("truetype");
+}
+
+#intro {
+  color: white;
+  font-family: "DOSBold";
+}
+
+.center-center {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+[class*="btn-glitch-"] {
+    margin: 0 0 1rem 0;
+    display: inline-block;
+    border: 1px solid #000;
+    color: #000;
+    padding: 0.7em 0.8em 0.7rem 0.2rem;
+    min-width: 400px;
+    height: 1rem;
+    line-height: 0.3rem;
+    white-space: no-wrap;
+    text-transform: uppercase;
+
+    @media (max-width: 768px) {
+        min-width: 300px;
+    }
+
+    cursor: pointer;
+    .text,
+    .decoration {
+        padding: 0.4rem 0 0 0;
+        display: inline-block;
+        font-size: 1.1rem;
+    }
+    .decoration {
+        display: inline-block;
+        float: right;
+    }
+
+    .text {
+        display: inline-flex;
+        z-index: 1;
+    }
+    &:hover, &:focus {
+        animation-name: glitch;
+        animation-duration: 0.2s;
+        background-color: #35D6ED;
+        color:#fff;
+        border: 1px solid #35D6ED;
+        .text-decoration {
+        animation-name: blink;
+        animation-duration: 0.1s;
+        animation-iteration-count: infinite;
+        }
+        .decoration {
+        animation-name: blink;
+        animation-duration: 0.1s;
+        animation-iteration-count: infinite;
+        }
+    }
+    &:active {
+        background: none;
+        color:yellow;
+        .text-decoration {
+        animation-name: none;
+        }
+        .decoration {
+        animation-name: none;
+        }
+        :before, :after {
+        display: none;
+        }
+    }
+}
+
+@keyframes glitch {
+  25% {
+    background-color: red;
+    transform: translateX(-5px);
+    letter-spacing: 0.1rem;
+  }
+  35% {
+    background-color: green;
+    transform: translate(5px);
+  }
+  59% {
+    opacity: 0;
+  }
+  60% {
+    background-color: blue;
+    transform: translate(5px);
+    filter: blur(5px);
+  }
+  100% {
+    background-color: #35D6ED;
+    blur: (5px);
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes shrink {
+  100% {
+    width: 10%;
+  }
+}
+
+.background {
+    background-color: #C9F6FF;
+    position: fixed;
+
+    top: 2rem;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+
+    font-family: "DOSBold", monospace;
+}
+
+.logo {
+    position: absolute;
+    top: 0;
+    left: 90%;
+    transform: translate(-50%, -50%);
+
+    @media (min-width: 1200px) {
+        left: 97%;
+    }
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+}
