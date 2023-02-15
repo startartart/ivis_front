@@ -17,6 +17,11 @@
         * 컴포넌트 정리 (Main -> App, MainForm -> Main, Welcome 수정 등)
         * 폰트 추가, 로고 삽입, 사용하지 않는 컴포넌트 제거
         * css animation 공부가 필요함
+    * 22.02.15 : SignUpForm Component post, get server
+        * 회원가입 -> 로그인 -> 신청서 작성 -> 로그아웃 단계
+        * IVIS-API-GUIDE 참고해 req, res 작성 및 받을 것
+        * 서버 오픈(02.19 이전 예정)에 따른 웹 프론트 TDD 작성이 필요한가
+
         
 * Install pacakge `npm install ...`
     * `react-router-dom`
@@ -29,6 +34,8 @@
         * 컴포넌트 스타일링
     * `react-particle-backgrounds`
         * 백그라운드 모델 템플릿
+    * `TextareaAutosize`
+        * 자동 사이즈 텍스트
 
 * Other DOCS
     * [Components Design](./documents/componet-design.md)
