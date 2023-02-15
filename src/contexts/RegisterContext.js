@@ -8,6 +8,7 @@ const initialRegisterState = {
     passwordCheck : '',
     check : 0,
     show : false,
+    isSubmit : false,
     error : null
 };
 
@@ -18,15 +19,37 @@ function registerReducer(state, action) {
                 ...state,
                 show : !state.show
             };
-        case 'CHANGE':
+        case 'REGISTER':
             return {
                 ...state,
-                [action.name] : action.value
+                check : 10 
             };
         case 'NEXT':
             return {
                 ...state,
                 check : state.check + 1
+            };
+        case 'PREV':
+            return {
+                ...state,
+                check : state.check - 1
+            };
+        case 'MYHOME':
+            return {
+                ...state,
+                check : 3
+            };
+        case 'CLOSE':
+            return {
+                ...state,
+                name : action.name,
+                phone : '',
+                studentNumber : '',
+                password : '',
+                passwordCheck : '',
+                check : 3,
+                show : false,
+                error : null
             };
         case 'CLEAR':
             return {
@@ -39,6 +62,11 @@ function registerReducer(state, action) {
                 check : 0,
                 show : false,
                 error : null
+            };
+        case 'SUBMIT':
+            return {
+                ...state,
+                isSubmit : true
             };
         case 'ERROR':
             return {
