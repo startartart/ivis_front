@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import "./SignUpForm.scss"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { useRegisterState, useRegisterDispatch } from "../contexts/RegisterContext";
+import TextareaAutosize from 'react-textarea-autosize';
 import axios from "axios";
 
 const SignUpFormFragment = styled.div`
@@ -13,7 +15,7 @@ const SignUpFormFragment = styled.div`
     width: auto;
     display: inline-flex;
     flex-direction: column;
-    padding: 1.6rem 3rem;
+    padding: 1.6rem 2.5rem;
     border: 3px solid black;
     border-radius: 5px;
     background: white;
@@ -57,8 +59,8 @@ const SignUpFormFragment = styled.div`
 const Text = styled.p`
     margin: 0.5rem;
     text-align: left;
+    line-height: 1.2;
 `;
-
 
 const ButtonBox = styled.div`
     display: flex;
@@ -76,14 +78,7 @@ const Button = styled.button`
     box-shadow: 0 0 0 black;
     transition: all 0.2s;
     cursor: pointer;
-
-    @media (min-width: 650px) {
-        min-width: 250px;
-    }
-
-    &:last-child {
-        margin: 0;
-    }
+    white-space:nowrap;
 
     &:hover {
         box-shadow: 0.4rem 0.4rem 0 black;
@@ -95,9 +90,6 @@ const Button = styled.button`
         transform: translate(0, 0);
     }
 
-    & + & {
-        margin-left: 0.2rem;
-    }
 `;
 
 const Label = styled.label`
@@ -113,6 +105,29 @@ const Label = styled.label`
         display: block;
         font-weight: bold;
     `}
+
+    ${props => props.error && `
+        display: block;
+        font-weight: bold;
+        color: red;
+
+        animation: shake 0.5s;
+
+            @keyframes shake {
+                0% { transform: translate(1px, 1px) rotate(0deg); }
+                10% { transform: translate(-1px, -2px) rotate(-1deg); }
+                20% { transform: translate(-3px, 0px) rotate(1deg); }
+                30% { transform: translate(3px, 2px) rotate(0deg); }
+                40% { transform: translate(1px, -1px) rotate(1deg); }
+                50% { transform: translate(-1px, 2px) rotate(-1deg); }
+                60% { transform: translate(-3px, 1px) rotate(0deg); }
+                70% { transform: translate(3px, 1px) rotate(-1deg); }
+                80% { transform: translate(-1px, -1px) rotate(1deg); }
+                90% { transform: translate(1px, 2px) rotate(0deg); }
+                100% { transform: translate(1px, -2px) rotate(-1deg); }
+            }
+    `}
+
 `;
 
 const ContinueButton = styled.i`
@@ -140,6 +155,12 @@ const Input = styled.input`
     background: transparent;
     transition: border-color 0.2s;
 
+    // remove default arrow
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
+
     &:focus {
         &::placeholder {
             color: transparent;
@@ -154,6 +175,11 @@ const Input = styled.input`
         transition: 0.5s;
         font-size: 1rem;
         color: #333333;
+
+        ${props => props.error && `
+            color: red;
+            font-weight: bold;
+        `}
     }
 `;
 
@@ -165,66 +191,115 @@ const InputBox = styled.div`
 `;
 
 const SignUpForm = ({control}) => {
+    const { check, name, isSubmit } = useRegisterState();
     const [values, setValues] = useState({
-        name: "",
+        name: name,
         phone: "",
         studentNumber: "",
         password: "",
         passwordCheck: "",
-        check: 0,
+        check: check,
+        cite: false,
+        isSubmit: isSubmit,
     });
-    const { check } = useRegisterState();
+    const [answer, setAnswer] = useState({
+        q1: "",
+        q2: "",
+        q3: "",
+        q4: ""
+    });
+
     const [passwordCheck, setPasswordCheck] = useState(false);
 
     const dispatch = useRegisterDispatch();
 
+    // state 값 변경 함수
     const onChange = (e) => {
         const { name, value } = e.target;
         setValues({
             ...values,
             [name]: value,
+            cite: false,
+        });
+    }
+    const onChangeText = (e) => {
+        const { name, value } = e.target;
+        setAnswer({
+            ...answer,
+            [name]: value,
         });
     }
 
-    const onCloseHandler = (e) => {
-        e.preventDefault();
-        dispatch({ type: 'CLEAR' });
+    // 학번 중복체크 존재하면 로그인 진행, 없으면 회원가입 진행
+    const sidCheckHandler = async () => {
+        await axios.post("http://localhost:4000/api/user/sidcheck", {
+            sid: values.studentNumber
+        }).then((res) => {
+            if (res.result === "true") {
+                // 로그인 진행
+                dispatch({
+                    type: "NEXT",
+                    check: check
+                });
+            } else {
+                // 회원가입 진행 
+                dispatch({
+                    type: "REGISTER",
+                    check: check
+                });
+            }
+        }).catch((err) => {
+            console.log(err);
+        });
+        // 임시용
+        dispatch({
+            type: "REGISTER",
+            check: check
+        });
     }
-
-    const ContinueEnterHandler = (e) => {
-        if (e.key === "Enter") {
+    // 비밀번호 체크, 8자리 이상, 비밀번호와 비밀번호 확인이 같은지 체크
+    const pwCheckHandler = async () => {
+        if (check === 10) {
+            if (values.password.length < 8) {
+                setValues({
+                    ...values,
+                    cite: true
+                });
+                return;
+            }
             dispatch({
                 type: "NEXT",
-                check: check + 1,
+                check: check + 1
             });
+            return;
         }
-    };
-
-    const ContinueHandler = (e) => {
-        dispatch({
-            type: "NEXT",
-            check: check + 1,
+        await axios.post("http://localhost:4000/api/user/pwcheck", {
+            sid: values.studentNumber,
+            pw: values.password
+        }).then((res) => {
+            if (res.result === "true") {
+                dispatch({
+                    type: "NEXT",
+                    check: check + 1,
+                });
+            } else {
+                alert("학번이 존재하지 않습니다.");
+            }
+        }).catch((err) => {
+            setValues({
+                ...values,
+                cite: true
+            });
         });
-    }; 
-
-    const handleCheckPasswordOver = (e) => {
-        e.preventDefault();
-        setPasswordCheck(true);
-    };
-
-    const handleCheckPasswordLeave = (e) => {
-        e.preventDefault();
-        setPasswordCheck(false);
-    };
-
+    }
     const onSubmitHandler = async (e) => {
         e.preventDefault();
         // API POST 나중에 다시 수정
-        await axios.post("http://localhost:4000/api/auth/register", {
+        await axios.post("http://localhost:4000/api/user/register", {
+            sid: values.studentNumber,
+            pw: values.password,
             name: values.name,
             phone: values.phone,
-            studentNumber: values.studentNumber,
-            password: values.password,
         })
         .then((res) => {
             console.log(res);
@@ -236,117 +311,350 @@ const SignUpForm = ({control}) => {
             type: "NEXT",
             check: check + 1,
         });
-    };
+    }
+    const onSendFormHandler = async (e) => {
+        e.preventDefault();
+        await axios.post("http://localhost:4000/api/application", {
+            intro: answer.q1,
+            language: answer.q2,
+            project: answer.q3,
+            etc: answer.q4,
+        })
+        .then((res) => {
+            console.log(res);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+        await dispatch({ type: 'SUBMIT' });
+        await dispatch({ type: 'MYHOME' });
+    }
+    const onResultCheckHandler = async (e) => {
+        e.preventDefault();
+        await axios.get("http://localhost:4000/api/application", {
+            //not params
+        })
+        .then((res) => {
+            console.log(res);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    }
 
+    // 이외 dispatch 함수
+    const continueEnterHandler = async (e) => {
+        if (e.key === "Enter") {
+            if (check === 1) {
+                sidCheckHandler();
+            } else if (check === 2 || check === 10) {
+                pwCheckHandler();
+            } else {
+                dispatch({
+                    type: "NEXT",
+                    check: check + 1,
+                });
+            }
+        }
+    };
+    const continueHandler = async (e) => {
+        if (check === 1) {
+            sidCheckHandler();
+        } else if (check === 2) {
+            pwCheckHandler();
+        } else {
+            dispatch({
+                type: "NEXT",
+                check: check + 1,
+            });
+        }
+    }; 
+    const onMoveMyHomeHandler = (e) => {
+        e.preventDefault();
+        dispatch({ type: 'MYHOME' });
+    }
+    const onPrevHandler = (e) => {
+        e.preventDefault();
+        dispatch({ type: 'PREV' });
+    }
     const onClearHandler = (e) => {
         e.preventDefault();
         dispatch({ type: 'CLEAR' });
     }
+    const onCloseHandler = (e) => {
+        e.preventDefault();
+        dispatch({ 
+            type: 'CLOSE',
+            name: values.name,
+        });
+    }
 
+    //비밀번호 확인 이벤트
+    const handleCheckPasswordOver = (e) => {
+        e.preventDefault();
+        setPasswordCheck(true);
+    };
+    const handleCheckPasswordLeave = (e) => {
+        e.preventDefault();
+        setPasswordCheck(false);
+    };
     return (
         <>
                 <SignUpFormFragment control={control}>     
                 {check === 0 && (
                     <>
-                        <p>2023년 IVIS 신입부원을 모집합니다.</p>
-                        <p>정보수집을 위해 이름, 전화번호, 학번이 필요합니다. 동의하십니까?</p>
+                        <Text>2023년 IVIS 신입부원을 모집합니다.</Text>
+                        <Text>정보수집을 위해 이름, 전화번호, 학번이 필요합니다. 동의하십니까?</Text>
+                        <Text>로그인 혹은 신청하려면 YES를 눌러주세요.</Text>
                         <ButtonBox>
-                            <Button onClick={ContinueHandler}>YES</Button>
-                            <Button onClick={onCloseHandler}>NO</Button>
+                            <Button className="row" onClick={continueHandler}>YES</Button>
+                            <Button className="row" onClick={onClearHandler}>NO</Button>
                         </ButtonBox>
                     </>
                 )}
                 {check >= 1 && (
                     <>
+                        {/* db에 학번이 존재할경우 dispatch{LOGIN}, 학번이 존재하지 않는경우 dispatch{NEXT} */}
                         {check === 1 && (
-                            <InputBox>
-                                <Input 
-                                    type="text" 
-                                    name="name"
-                                    value={values.name}
-                                    onChange={onChange}
-                                    onKeyPress={ContinueEnterHandler}
-                                    autoFocus placeholder="이름"
-                                    maxLength={4} />
-                                <ContinueButton
-                                    value={values.name}
-                                    onClick={ContinueHandler}>
-                                        <FontAwesomeIcon icon={faArrowRight} />
-                                </ContinueButton>
-                                <Label>이름</Label>
-                            </InputBox>
+                        <InputBox>
+                            <Input
+                                type="number"
+                                name="studentNumber"
+                                value={values.studentNumber}
+                                onChange={onChange}
+                                onKeyPress={continueEnterHandler}
+                                autoFocus placeholder="학번"
+                                maxLength={10} />
+                            <ContinueButton
+                                value={values.studentNumber}
+                                onClick={continueHandler}>
+                                    <FontAwesomeIcon icon={faArrowRight} />
+                            </ContinueButton>
+                            <Label>학번</Label>
+                        </InputBox>
                         )}
                         {check === 2 && (
-                            <InputBox>
-                                <Input
-                                    type="text"
-                                    name="phone"
-                                    value={values.phone}
-                                    onChange={onChange}
-                                    onKeyPress={ContinueEnterHandler}
-                                    autoFocus placeholder="전화번호(- 제외)" 
-                                    maxLength={12}/>
-                                <ContinueButton
-                                    value={values.phone} 
-                                    onClick={ContinueHandler}>
-                                        <FontAwesomeIcon icon={faArrowRight} />
-                                </ContinueButton>
-                                <Label>전화번호(- 제외)</Label>
-                            </InputBox>
+                        <InputBox>
+                            <Input
+                                type="password"
+                                name="password"
+                                value={values.password}
+                                onChange={onChange} 
+                                onKeyPress={continueEnterHandler}
+                                autoFocus placeholder="비밀번호"
+                                maxLength={15}
+                                error={values.cite} />
+                            <ContinueButton
+                                value={values.password}
+                                onClick={continueHandler}>
+                                    <FontAwesomeIcon icon={faArrowRight} />
+                            </ContinueButton>
+                            <Label error={values.cite}>{values.cite === false 
+                                ? "비밀번호"
+                                : "틀린 비밀번호입니다."
+                            }</Label>
+                        </InputBox>
                         )}
+
+                        {/* MyHome */}
                         {check === 3 && (
-                            <InputBox>
-                                <Input
-                                    type="text"
-                                    name="studentNumber"
-                                    value={values.studentNumber}
-                                    onChange={onChange}
-                                    onKeyPress={ContinueEnterHandler}
-                                    autoFocus placeholder="학번"
-                                    maxLength={10} />
-                                <ContinueButton
-                                    value={values.studentNumber}
-                                    onClick={ContinueHandler}>
-                                        <FontAwesomeIcon icon={faArrowRight} />
-                                </ContinueButton>
-                                <Label>학번</Label>
-                            </InputBox>
+                            <>
+                                <Text>MyHome : {values.name} {isSubmit === true ? "[신청 완료]" : "[미신청]"}</Text>
+                                {isSubmit ? null : <Button className="col" onClick={continueHandler}>신청하기</Button>}
+                                {isSubmit ? <Button className="col" onClick={onResultCheckHandler}>신청결과</Button> : null}
+                                <Button className="col" onClick={onCloseHandler}>나가기</Button>
+                                <Button className="col" onClick={onClearHandler}>로그아웃</Button>
+                            </>
                         )}
+
+                        {/* 신청하기 */}
                         {check === 4 && (
-                            <InputBox>
-                                <Input
-                                    type="password"
-                                    name="password"
-                                    value={values.password}
-                                    onChange={onChange} 
-                                    onKeyPress={ContinueEnterHandler}
-                                    autoFocus placeholder="비밀번호(최대 15)"
-                                    maxLength={15} />
-                                <ContinueButton
-                                    value={values.password}
-                                    onClick={ContinueHandler}>
-                                        <FontAwesomeIcon icon={faArrowRight} />
-                                </ContinueButton>
-                                <Label>비밀번호(최대 15)</Label>
-                            </InputBox>
+                            <>
+                                <Text>신청서는 각 순서에 맞게 답변하며, 보낸 양식은 수정 불가능합니다.</Text>
+                                <Text>자기소개 - 사용 가능 프로그래밍 언어 - 프로젝트 경험 - 향후 계획, 희망 분야 순으로 작성합니다.</Text>
+                                <ButtonBox>
+                                    <Button className="row" onClick={onPrevHandler}>CLOSE</Button>
+                                    <Button className="row" onClick={continueHandler}>NEXT</Button>
+                                </ButtonBox>
+                                
+                            </>
                         )}
                         {check === 5 && (
                             <>
-                                <Text>입력하신 정보가 맞는지 확인해주세요.</Text>
-                                <Text>이름: {values.name}</Text>
-                                <Text>전화번호: {values.phone}</Text>
-                                <Text>학번: {values.studentNumber}</Text>
-                                <Text onMouseOver={handleCheckPasswordOver} onMouseLeave={handleCheckPasswordLeave}>비밀번호(확인): {passwordCheck ? values.password : values.password.replace(/./g, "*")}</Text>
+                                <Text>1. 자기소개</Text>
+                                <InputBox>
+                                    <TextareaAutosize
+                                    name="q1"
+                                    className="text-area"
+                                    minRows={3}
+                                    maxRows={10}
+                                    placeholder="이름, 연구실 지원 동기 등 간단한 자기 소개"
+                                    onChange={onChangeText}
+                                    value={answer.q1}
+                                    />
+                                </InputBox>
                                 <ButtonBox>
-                                    <Button onClick={onSubmitHandler}>YES</Button>
-                                    <Button onClick={onCloseHandler}>NO</Button>
+                                    <Button className="row" onClick={onPrevHandler}>PREV</Button>
+                                    <Button className="row" onClick={continueHandler}>NEXT</Button>
                                 </ButtonBox>
                             </>
                         )}
                         {check === 6 && (
+                            <>
+                                <Text>2. 사용 가능 프로그래밍 언어</Text>
+                                <Text>능숙함을 기준으로 상,중,하로 쉼표로 구분</Text>
+                                <Text>없으면 "없음" 으로 기재</Text>
+                                <InputBox>
+                                    <TextareaAutosize
+                                    name="q2"
+                                    className="text-area"
+                                    minRows={2}
+                                    maxRows={5}
+                                    placeholder="C언어(상), C++(중), JAVA(하)"
+                                    onChange={onChangeText}
+                                    value={answer.q2}
+                                    />
+                                </InputBox>
+                                <ButtonBox>
+                                    <Button className="row" onClick={onPrevHandler}>PREV</Button>
+                                    <Button className="row" onClick={continueHandler}>NEXT</Button>
+                                </ButtonBox>
+                            </>
+                        )}
+                        {check === 7 && (
+                            <>
+                                <Text>3. 프로젝트 경험</Text>
+                                <Text>없으면 "없음" 으로 기재</Text>
+                                <InputBox>
+                                    <TextareaAutosize
+                                    name="q3"
+                                    className="text-area"
+                                    minRows={2}
+                                    maxRows={5}
+                                    placeholder="개인 웹페이지 제작, 라즈베리파이를 이용한 IoT 프로젝트, 유니티를 이용한 게임 제작 등"
+                                    onChange={onChangeText}
+                                    value={answer.q3}
+                                    />
+                                </InputBox>
+                                <ButtonBox>
+                                    <Button className="row" onClick={onPrevHandler}>PREV</Button>
+                                    <Button className="row" onClick={continueHandler}>NEXT</Button>
+                                </ButtonBox>
+                            </>
+                        )}
+                        {check === 8 && (
+                            <>
+                                <Text>4. 향후 계획, 희망 분야</Text>
+                                <Text>다음 답변에 따라 학년별로 다양한 커리큘럼을 제공합니다.</Text>
+                                <InputBox>
+                                    <TextareaAutosize
+                                    name="q4"
+                                    className="text-area"
+                                    minRows={4}
+                                    maxRows={6}
+                                    placeholder="아직 웹페이지 제작에 대한 지식이 없지만, 이번 년도 안에 개인 블로그를 만들어보고 싶습니다."
+                                    onChange={onChangeText}
+                                    value={answer.q4}
+                                    />
+                                </InputBox>
+                                <ButtonBox>
+                                    <Button className="row" onClick={onPrevHandler}>PREV</Button>
+                                    <Button className="row" onClick={continueHandler}>NEXT</Button>
+                                </ButtonBox>
+                            </>
+                        )}
+                        {check === 9 && (
+                            <>
+                                <Text>신청서 작성이 완료되었습니다.</Text>
+                                <Text>신청서는 수정이 불가능하므로 신중히 작성해주세요.</Text>
+                                <Text>차후, 신청결과는 개인 카카오톡 혹은 MyHome에서 확인하실 수 있습니다.</Text>
+                                <ButtonBox>
+                                    <Button className="row" onClick={onPrevHandler}>PREV</Button>
+                                    <Button className="row" onClick={onSendFormHandler}>SEND</Button>
+                                </ButtonBox>
+                            </>
+                        )}
+
+                        {/* 신입부원 회원가입 */}
+                        {check === 10 && (
                             <InputBox>
-                                <Label value={true} onClick={onClearHandler} >신청이 완료되었습니다.</Label>
-                            </InputBox>
+                            <Input
+                                type="password"
+                                name="password"
+                                value={values.password}
+                                onChange={onChange} 
+                                onKeyPress={continueEnterHandler}
+                                autoFocus placeholder="비밀번호(최대 15)"
+                                maxLength={15}
+                                error={values.cite} />
+                            <ContinueButton
+                                value={values.password}
+                                onClick={continueHandler}>
+                                    <FontAwesomeIcon icon={faArrowRight} />
+                            </ContinueButton>
+                            <Label error={values.cite}>{values.cite === false 
+                                ? "비밀번호(최소 8, 최대 15)"
+                                : "올바르지 않는 규칙입니다."
+                            }</Label>
+                        </InputBox>
+                        )}
+                        {check === 11 && (
+                            <InputBox>
+                            <Input 
+                                type="text" 
+                                name="name"
+                                value={values.name}
+                                onChange={onChange}
+                                onKeyPress={continueEnterHandler}
+                                autoFocus placeholder="이름"
+                                maxLength={4} />
+                            <ContinueButton
+                                value={values.name}
+                                onClick={continueHandler}>
+                                    <FontAwesomeIcon icon={faArrowRight} />
+                            </ContinueButton>
+                            <Label>이름</Label>
+                        </InputBox>
+                        )}
+                        {check === 12 && (
+                            <InputBox>
+                            <Input
+                                type="number"
+                                name="phone"
+                                value={values.phone}
+                                onChange={onChange}
+                                onKeyPress={continueEnterHandler}
+                                autoFocus placeholder="전화번호(- 제외)" 
+                                maxLength={12}/>
+                            <ContinueButton
+                                value={values.phone} 
+                                onClick={continueHandler}>
+                                    <FontAwesomeIcon icon={faArrowRight} />
+                            </ContinueButton>
+                            <Label>전화번호(- 제외)</Label>
+                        </InputBox>
+                        )}
+                        {check === 13 && (
+                        <>
+                            <Text>입력하신 정보가 맞는지 확인해주세요.</Text>
+                            <Text>이름: {values.name}</Text>
+                            <Text>전화번호: {values.phone}</Text>
+                            <Text>학번: {values.studentNumber}</Text>
+                            <Text onMouseOver={handleCheckPasswordOver} onMouseLeave={handleCheckPasswordLeave}>비밀번호(확인): {passwordCheck ? values.password : values.password.replace(/./g, "*")}</Text>
+                            <ButtonBox>
+                                <Button className="row" onClick={onSubmitHandler}>YES</Button>
+                                <Button className="row" onClick={onClearHandler}>NO</Button>
+                            </ButtonBox>
+                        </>
+                        )}
+                        {check === 14 && (
+                            <>
+                                <Text>회원가입이 완료되었습니다. </Text>
+                                <Text>신청서 필요정보를 등록해주세요.</Text>
+                                <Text>로그인 페이지로 이동합니다.</Text>
+                                <Button className="col" onClick={onMoveMyHomeHandler}>이동하기</Button>
+                                <Button className="col" onClick={onCloseHandler}>닫기</Button>
+                            </>
                         )}
                     </>
                 )}
