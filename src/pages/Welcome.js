@@ -3,6 +3,7 @@ import "./Welcome.scss";
 import styled from 'styled-components';
 import { useRegisterState, useRegisterDispatch } from '../contexts/RegisterContext';
 import SignUpForm from '../share-components/SignUpForm';
+import WelcomeBackground from '../Welcome-components/WelcomeBackground';
 
 const SignatureTitleFragment = styled.div`
     position: absolute;
@@ -19,6 +20,7 @@ const TextFragment = styled.div`
 	left: 50%;
 	transform: translateX(-50%);
 	user-select: none;
+    color: #05AFF2;
 `;
 
 const Letter = styled.div`
@@ -101,6 +103,7 @@ const Welcome = () => {
         // display ? (
         // <AllWrapperFragment status={animation}>
         <div className="background">
+            <WelcomeBackground/>
             <SignatureTitleFragment>
                 <TextFragment>
                     <WrapperFragment>
@@ -123,7 +126,7 @@ const Welcome = () => {
             </SignatureTitleFragment>
             <div className="center-center">
                 <a href="#javascript" className="btn-glitch-fill" onClick={onOpenHandler}>
-                    <span className="text"><UpdateText status={'new'}>[new]</UpdateText>2023 신입부원 모집</span>
+                    <span className="text"><UpdateText status={'new'}>[new]</UpdateText>로그인, 회원가입</span>
                     <span className="text-decoration">_</span>
                     <span className="decoration">&rArr;</span>
                 </a>

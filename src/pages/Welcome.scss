@@ -121,23 +121,17 @@
 }
 
 .background {
-    background-color: #C9F6FF;
     position: fixed;
-
-    top: 2rem;
     left: 0;
     width: 100%;
     height: 100%;
-
-    border-top-left-radius: 50%;
-    border-top-right-radius: 50%;
 
     font-family: "DOSBold", monospace;
 }
 
 .logo {
     position: absolute;
-    top: 0;
+    top: 4%;
     left: 90%;
     transform: translate(-50%, -50%);
 
