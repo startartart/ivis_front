@@ -21,7 +21,11 @@
         * 회원가입 -> 로그인 -> 신청서 작성 -> 로그아웃 단계
         * IVIS-API-GUIDE 참고해 req, res 작성 및 받을 것
         * 서버 오픈(02.19 이전 예정)에 따른 웹 프론트 TDD 작성이 필요한가
-
+    * 22.02.16 : pages(Main) component rebuilding (About, Footer, MainForm, Member, Menu, Services)
+        * 현재 진행 상황 : MainForm, Menu, Footer, 남은 컴포넌트 : About, Member, Services
+        * 로딩 컴포넌트 작성 필요
+        * SignUpForm 컴포넌트를 어디에 재활용할 것인가? -> Services에 하는게 나을 듯
+        * 시간부족으로 인해 codePen을 적극 활용하여 디자인을 할 것
         
 * Install pacakge `npm install ...`
     * `react-router-dom`
