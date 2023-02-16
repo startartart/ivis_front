@@ -1,0 +1,35 @@
+// Colors
+$bg-color: #C9F6FF;
+$dot-color: #05AFF2;
+
+// Dimensions
+$dot-size: 1px;
+$dot-space: 22px;
+
+.main-background {
+  background:
+		linear-gradient(90deg, $bg-color ($dot-space - $dot-size), transparent 1%) center,
+		linear-gradient($bg-color ($dot-space - $dot-size), transparent 1%) center,
+		$dot-color;
+	background-size: $dot-space $dot-space;
+  height: 100vh;
+}
+
+@font-face {
+  font-family: "DOSBold";
+  src: url("../fonts/DOSIyagiBoldface.ttf") format("truetype");
+}
+
+  .pages {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    font-family: "DOSBold";
+  }
+  
+  @media only screen and (max-width: 768px) {
+    .pages {
+      font-size: 2.5rem;
+    }
+  }
+
