@@ -103,6 +103,7 @@ const Welcome = () => {
         // display ? (
         // <AllWrapperFragment status={animation}>
         <div className="background">
+            <div id="intro">모바일 세로모드에 최적화된 환경입니다.</div>
             <WelcomeBackground/>
             <SignatureTitleFragment>
                 <TextFragment>
@@ -130,7 +131,7 @@ const Welcome = () => {
                     <span className="text-decoration">_</span>
                     <span className="decoration">&rArr;</span>
                 </a>
-                <a href="#javascript" className="btn-glitch-fill" onClick={goMainHandler}>
+                <a href="/main" className="btn-glitch-fill" onClick={goMainHandler}>
                     <span className="text"><UpdateText status={'incomplete'}>[incomplete]</UpdateText>메인 페이지</span>
                     <span className="text-decoration">_</span>
                     <span className="decoration">&rArr;</span>

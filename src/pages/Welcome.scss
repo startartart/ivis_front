@@ -4,8 +4,14 @@
 }
 
 #intro {
-  color: white;
+  margin-top: 0.2rem;
+  font-size: 1rem;
+  color: black;
   font-family: "DOSBold";
+
+  @media (max-width: 1024px) {
+    font-size: 0.4rem;
+  }
 }
 
 .center-center {
