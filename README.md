@@ -29,6 +29,9 @@
     * 22.02.17 : About, Member Component Update & Services -> Developer Component
         * [ivis.dev](https://ivis.dev/) front-back server open
         * Main page 완성할 것
+    * 22.02.18 : Member Component Update & SignUpForm HTTP request udpate
+        * 추가 결과확인 컴포넌트를 짤 것
+        * 기타 수정사항 및 버그 최종확인 해야함
         
 * Install pacakge `npm install ...`
     * `react-router-dom`
