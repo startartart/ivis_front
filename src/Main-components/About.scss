@@ -1,0 +1,196 @@
+.about-frames {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;   
+
+    h5 {
+        margin: 0;
+        padding: 2rem;
+    }
+}
+
+.about-title {
+    text-align: left;
+    height: 7rem;
+}
+
+.about-content {
+    //center
+    margin-left: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    @media (min-width: 1200px) {
+        margin-left: 20rem;
+    }
+}
+
+
+.book > .book-credit {
+    width: 18rem;
+    height: 32rem;
+	overflow: auto;
+	background-color: #c9dbe9;
+	transform: scale(0.9);
+	border-radius: 3%;
+	transform-origin: left;
+
+    @media (min-width: 1200px) {
+        width: 40rem;
+        height: 50rem;
+    }
+}
+
+.book-cover {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: absolute;
+	z-index: 9;
+	text-align: center;
+	background: url("../../public/images/ivis-logo310.png") no-repeat center;
+    border: 2px solid #000;
+
+	color: white;
+	transition: transform 2s;
+}
+
+.book-cover::before {
+	content: "";
+}
+
+.book-content {
+	transform: scale(0.9) translateY(30px);
+	background-color: white !important;
+	transition: all 0.3s 1s;
+    border: 2px solid #000;
+    border-left: none;
+}
+
+.book-content h3,
+.book-content p {
+	opacity: 0;
+	transition: all 0.3s 0.3s;
+}
+
+.book-cover > div {
+	transition: opacity 0s 0.6s;
+}
+
+.book:hover > .book-cover {
+	transform: rotateY(180deg) scale(0.9);
+}
+
+.book:hover > .book-cover > div {
+	opacity: 0;
+    transition: all 0.3s 0.3s;
+}
+
+.book:hover > .book-content {
+	transform: scale(0.9) translateY(0px);
+}
+
+.book:hover > .book-content h3,
+.book:hover > .book-content p {
+	opacity: 1;
+}
+
+.book-top {
+    font-size: 1.5rem;
+    font-weight: 600;
+    text-align: center;
+    margin: 1rem auto 10rem auto;
+    text-transform: uppercase;
+    letter-spacing: 0.2rem;
+    line-height: 1.5;
+    color: black;
+}
+
+.book-under {
+    font-size: 1.3rem;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.1rem;
+    line-height: 1.5;
+    color: black; 
+}
+
+.content-title {
+    font-size: 1.4rem;
+    margin: 1rem;
+}
+
+.content-detail {
+    font-size: 1.1rem;
+    margin: 1rem;
+    line-height: 1.2;
+
+    a {
+        &:hover {
+            color: #c9dbe9;
+        }
+    }
+}
+
+.ribbon {
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    position: absolute;
+  }
+  .ribbon::before,
+  .ribbon::after {
+    position: absolute;
+    z-index: -1;
+    content: '';
+    display: block;
+    border: 5px solid #2980b9;
+  }
+  .ribbon span {
+    position: absolute;
+    display: block;
+    width: 225px;
+    padding: 1rem 0rem;
+    background-color: #05AFF2;
+    box-shadow: 0 5px 10px rgba(0,0,0,.1);
+    color: #fff;
+    font-size: 1.2rem;
+    text-shadow: 0 1px 1px rgba(0,0,0,.2);
+    text-transform: uppercase;
+    text-align: center;
+
+    a {
+        color: #fff;
+        &:hover {
+            color: #c9dbe9;
+        }
+    }
+    
+  }
+  
+  /* top left*/
+  .ribbon-top-left {
+    top: -10px;
+    left: -10px;
+  }
+  .ribbon-top-left::before,
+  .ribbon-top-left::after {
+    border-top-color: transparent;
+    border-left-color: transparent;
+  }
+  .ribbon-top-left::before {
+    top: 0;
+    right: 0;
+  }
+  .ribbon-top-left::after {
+    bottom: 0;
+    left: 0;
+  }
+  .ribbon-top-left span {
+    right: -25px;
+    top: 30px;
+    transform: rotate(-45deg);
+  }
