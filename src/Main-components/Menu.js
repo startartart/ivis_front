@@ -106,11 +106,6 @@ const ItemLink = styled(NavLink)`
   display: inline-block;
   font-size: 3rem;
   font-weight: 300;
-  @font-face {
-    font-family: "DOSBold";
-    src: url("../fonts/DOSIyagiBoldface.ttf") format("truetype");
-  }
-  font-family: "DOSBold";
   text-decoration: none;
   color: ${COLORS.primaryLight};
   padding: 1rem 2rem;

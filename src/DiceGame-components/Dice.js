@@ -1,6 +1,5 @@
 import React from 'react';
 import './Dice.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Pip = () => <span className="pip" />;
 

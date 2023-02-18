@@ -74,6 +74,10 @@ const UpdateText = styled.div`
 
     ${props => props.status === 'incomplete' && `
         color: green;
+    `}
+
+    ${props => props.status === 'No entry' && `
+        color: gray;
         text-decoration: line-through;
     `}
 
@@ -126,7 +130,7 @@ const Welcome = () => {
                 </TextFragment>
             </SignatureTitleFragment>
             <div className="center-center">
-                <a href="#javascript" className="btn-glitch-fill" onClick={onOpenHandler}>
+                <a href="#javascript" className="btn-glitch-fill" onClick={onOpenHandler} >
                     <span className="text"><UpdateText status={'new'}>[new]</UpdateText>로그인, 회원가입</span>
                     <span className="text-decoration">_</span>
                     <span className="decoration">&rArr;</span>
@@ -136,8 +140,8 @@ const Welcome = () => {
                     <span className="text-decoration">_</span>
                     <span className="decoration">&rArr;</span>
                 </a>
-                <a href="#javascript" className="btn-glitch-fill">
-                    <span className="text"><UpdateText status={'incomplete'}>[incomplete]</UpdateText>자료실</span>
+                <a href="#javascript" className="btn-glitch-fill click-none">
+                    <span className="text"><UpdateText status={'No entry'}>[No entry]</UpdateText>자료실</span>
                     <span className="text-decoration">_</span>
                     <span className="decoration">&rArr;</span>
                 </a>

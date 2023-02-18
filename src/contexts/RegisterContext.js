@@ -68,10 +68,11 @@ function registerReducer(state, action) {
                 ...state,
                 isSubmit : true
             };
-        case 'USERNAME':
+        case 'CHECK':
             return {
                 ...state,
-                name : action.name
+                name : action.name,
+                isSubmit : action.isSubmit
             };
         case 'ERROR':
             return {
