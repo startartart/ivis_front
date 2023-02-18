@@ -1,31 +1,138 @@
-import React from 'react';
+import React, { useState } from 'react';
 import "./Member.scss"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGithub, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { faArrowLeftLong, faArrowRightLong } from '@fortawesome/free-solid-svg-icons';
 
+const members = [
+    {
+        name: "박병권",
+        grade: "4학년",
+        phone: "010-8353-2755",
+        email: "startart@naver.com",
+        language: "C++, JavaScript, Python",
+        links: [
+            {
+                name: "github",
+                link: "https://github.com/startartart"
+            },
+            {
+                name: "instagram",
+                link: "https://www.instagram.com/b2_gw0n"
+            }
+        ]
+    },
+    {
+        name: "김상범",
+        grade: "4학년",
+        phone: "010-5125-2912",
+        email: "-",
+        language: "-",
+        links: [
+            {
+                name: "github",
+                link: ""
+            },
+            {
+                name: "instagram",
+                link: ""
+            }
+        ]
+    },
+    {
+        name: "김은지",
+        grade: "4학년",
+        phone: "010-9254-6292",
+        email: "-",
+        language: "-",
+        links: [
+            {
+                name: "github",
+                link: ""
+            },
+            {
+                name: "instagram",
+                link: ""
+            }
+        ]
+    },
+    {
+        name: "마승욱",
+        grade: "3학년",
+        phone: "010-8253-9918",
+        email: "-",
+        language: "-",
+        links: [
+            {
+                name: "github",
+                link: ""
+            },
+            {
+                name: "instagram",
+                link: ""
+            }
+        ]
+    },
+    {
+        name: "임동균",
+        grade: "3학년",
+        phone: "010-3170-9934",
+        email: "-",
+        language: "-",
+        links: [
+            {
+                name: "github",
+                link: ""
+            },
+            {
+                name: "instagram",
+                link: ""
+            }
+        ]
+    },
+]
+
 const Member = () => {
+    const [index, setIndex] = useState(0);
+
+    const nextMember = () => {
+        if (index === members.length - 1) {
+            setIndex(0);
+        } else {
+            setIndex(index + 1);
+        }
+    }
+
+    const prevMember = () => {
+        if (index === 0) {
+            setIndex(members.length - 1);
+        } else {
+            setIndex(index - 1);
+        }
+
+    }
     return (
         <div className="member-wrapper">
             <div className="member-title">
                 <p>Member Profiles</p>
             </div>
             <div className="member-selector-form">
-                <div className="member-selector-left"><FontAwesomeIcon icon={faArrowLeftLong} /></div>
+                <div className="member-selector-left"><FontAwesomeIcon icon={faArrowLeftLong} onClick={prevMember}/></div>
                 <div className="member-selector-center">
+                    no image
                 </div>
-                <div className="member-selector-right"><FontAwesomeIcon icon={faArrowRightLong} /></div>
+                <div className="member-selector-right"><FontAwesomeIcon icon={faArrowRightLong} onClick={nextMember} /></div>
             </div>
             <div className="member-show-form">
-                <p>이름 : 박병권</p>
-                <p>학년 : 4학년</p>
-                <p>휴대폰 : 010-8353-2755</p>
-                <p>이메일 : startartart@naver.com</p>
-                <p>프로그래밍 언어 : C++, JavaScript, Python</p>
+                <p>이름 : {members[index].name}</p>
+                <p>학년 : {members[index].grade}</p>
+                <p>휴대폰 : {members[index].phone}</p>
+                <p>이메일 : {members[index].email}</p>
+                <p>프로그래밍 언어 : {members[index].language}</p>
                 <hr/>
                 <div className="member-icon-list">
-                <a className="member-icon" href="https://github.com/startartart"><FontAwesomeIcon icon={faGithub} /></a>
-                <a className="member-icon" href="https://github.com/startartart"><FontAwesomeIcon icon={faInstagram} /></a>
+                <a className="member-icon" href={members[index].links[0].link}><FontAwesomeIcon icon={faGithub} /></a>
+                <a className="member-icon" href={members[index].links[1].link}><FontAwesomeIcon icon={faInstagram} /></a>
                 </div>
             </div>
         </div>
