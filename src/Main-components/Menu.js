@@ -38,8 +38,8 @@ const NavBackground = styled.div`
     ${COLORS.primaryDark},
     ${COLORS.primaryLight}
   );
-  height: 6rem;
-  width: 6rem;
+  height: 6.5rem;
+  width: 6.5rem;
   border-radius: 50%;
   z-index: 600;
   transform: ${(props) => (props.clicked ? "scale(80)" : "scale(0)")};
@@ -100,6 +100,7 @@ const List = styled.ul`
   transform: translate(-50%, -50%);
   text-align: center;
   width: 100%;
+  padding: 0;
 `;
 const ItemLink = styled(NavLink)`
   display: inline-block;
@@ -152,13 +153,13 @@ function Menu() {
             </ItemLink>
           </li>
           <li>
-            <ItemLink onClick={handleClick} to="/main/services">
-              Services
+            <ItemLink onClick={handleClick} to="/main/member">
+              Member
             </ItemLink>
           </li>
           <li>
-            <ItemLink onClick={handleClick} to="/main/member">
-              Member
+            <ItemLink onClick={handleClick} to="/main/developer">
+              Developer
             </ItemLink>
           </li>
         </List>
