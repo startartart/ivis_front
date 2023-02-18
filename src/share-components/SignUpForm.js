@@ -234,7 +234,8 @@ const SignUpForm = ({control}) => {
     const sidCheckHandler = async () => {
         await axios.post("https://ivis.dev/api/user/sidcheck", {
             sid: values.studentNumber
-        }).then((res) => {
+        },{withCredentials: true}
+        ).then((res) => {
             if (res.data.result === true) {
                 // 로그인 진행
                 dispatch({
@@ -272,7 +273,7 @@ const SignUpForm = ({control}) => {
         }
         await axios.post("https://ivis.dev/api/user/pwcheck", {
             sid: values.studentNumber,
-            pw: values.password
+            pw: values.password,
         },{withCredentials: true}
         ).then((res) => {
             console.log(res);
@@ -282,8 +283,9 @@ const SignUpForm = ({control}) => {
                     check: check + 1,
                 });
                 dispatch({
-                    type: "USERNAME",
-                    name: res.data.name
+                    type: "CHECK",
+                    name: res.data.name,
+                    isSubmit: res.data.apply
                 });
             } else {
                 setValues({
@@ -303,8 +305,8 @@ const SignUpForm = ({control}) => {
             pw: values.password,
             name: values.name,
             phone: values.phone,
-        })
-        .then((res) => {
+        },{withCredentials: true}
+        ).then((res) => {
             console.log(res);
         })
         .catch((err) => {
@@ -318,9 +320,11 @@ const SignUpForm = ({control}) => {
     }
     const onSendFormHandler = async (e) => {
         e.preventDefault();
+        const languageArray = answer.q2.split(',');
+        console.log(languageArray);
         await axios.post("https://ivis.dev/api/application", {
             intro: answer.q1,
-            language: answer.q2,
+            language: languageArray,
             project: answer.q3,
             etc: answer.q4,
             
@@ -345,6 +349,19 @@ const SignUpForm = ({control}) => {
         .catch((err) => {
             console.log(err);
         });
+    }
+    const onSendLogoutHandler = async (e) => {
+        e.preventDefault();
+        await axios.get("https://ivis.dev/api/user/logout", {
+            //not params
+        })
+        .then((res) => {
+            console.log(res);
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+        dispatch({ type: 'CLEAR' });
     }
 
     // 이외 dispatch 함수
@@ -386,6 +403,7 @@ const SignUpForm = ({control}) => {
         e.preventDefault();
         dispatch({ type: 'CLEAR' });
     }
+    
     const onCloseHandler = (e) => {
         e.preventDefault();
         dispatch({ 
@@ -465,10 +483,10 @@ const SignUpForm = ({control}) => {
                         {check === 3 && (
                             <>
                                 <Text>MyHome : {name} {isSubmit === true ? "[신청 완료]" : "[미신청]"}</Text>
-                                {isSubmit ? null : <Button className="col" onClick={continueHandler}>신청하기</Button>}
-                                {isSubmit ? <Button className="col" onClick={onResultCheckHandler}>신청결과</Button> : null}
+                                {isSubmit === true ? null : <Button className="col" onClick={continueHandler}>신청하기</Button>}
+                                {isSubmit === true ? <Button className="col" onClick={onResultCheckHandler}>신청결과</Button> : null}
                                 <Button className="col" onClick={onCloseHandler}>나가기</Button>
-                                <Button className="col" onClick={onClearHandler}>로그아웃</Button>
+                                <Button className="col" onClick={onSendLogoutHandler}>로그아웃</Button>
                             </>
                         )}
 
@@ -507,7 +525,7 @@ const SignUpForm = ({control}) => {
                         {check === 6 && (
                             <>
                                 <Text>2. 사용 가능 프로그래밍 언어</Text>
-                                <Text>능숙함을 기준으로 상,중,하로 쉼표로 구분</Text>
+                                <Text>능숙함을 기준으로 상,중,하로 쉼표로 띄우지 말고 구분</Text>
                                 <Text>없으면 "없음" 으로 기재</Text>
                                 <InputBox>
                                     <TextareaAutosize
@@ -515,7 +533,7 @@ const SignUpForm = ({control}) => {
                                     className="text-area"
                                     minRows={2}
                                     maxRows={5}
-                                    placeholder="C언어(상), C++(중), JAVA(하)"
+                                    placeholder="C언어(상),C++(중),JAVA(하)"
                                     onChange={onChangeText}
                                     value={answer.q2}
                                     />
