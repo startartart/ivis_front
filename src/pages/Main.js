@@ -4,7 +4,7 @@ import './Main.scss';
 import MainForm from "../Main-components/MainForm";
 import About from "../Main-components/About";
 import Member from "../Main-components/Member";
-import Services from "../Main-components/Services";
+import Developer from "../Main-components/Developer";
 import Menu from "../Main-components/Menu";
 import Footer from '../Main-components/Footer';
 
@@ -17,7 +17,7 @@ const Main = () => {
           <Route path="/" element={<MainForm />} />
           <Route path="about" element={<About />} />
           <Route path="member" element={<Member />} />
-          <Route path="services" element={<Services />} />
+          <Route path="developer" element={<Developer />} />
       </Routes>
       <Footer />
       </div>

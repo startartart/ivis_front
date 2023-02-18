@@ -232,29 +232,26 @@ const SignUpForm = ({control}) => {
 
     // 학번 중복체크 존재하면 로그인 진행, 없으면 회원가입 진행
     const sidCheckHandler = async () => {
-        await axios.post("http://localhost:4000/api/user/sidcheck", {
+        await axios.post("https://ivis.dev/api/user/sidcheck", {
             sid: values.studentNumber
         }).then((res) => {
-            if (res.result === "true") {
+            if (res.data.result === true) {
                 // 로그인 진행
                 dispatch({
                     type: "NEXT",
                     check: check
                 });
+                console.log("로그인 진행");
             } else {
                 // 회원가입 진행 
                 dispatch({
                     type: "REGISTER",
                     check: check
                 });
+                console.log("회원가입진행");
             }
         }).catch((err) => {
             console.log(err);
-        });
-        // 임시용
-        dispatch({
-            type: "REGISTER",
-            check: check
         });
     }
     // 비밀번호 체크, 8자리 이상, 비밀번호와 비밀번호 확인이 같은지 체크
@@ -273,29 +270,35 @@ const SignUpForm = ({control}) => {
             });
             return;
         }
-        await axios.post("http://localhost:4000/api/user/pwcheck", {
+        await axios.post("https://ivis.dev/api/user/pwcheck", {
             sid: values.studentNumber,
             pw: values.password
-        }).then((res) => {
-            if (res.result === "true") {
+        },{withCredentials: true}
+        ).then((res) => {
+            console.log(res);
+            if (res.data.result === true) {
                 dispatch({
                     type: "NEXT",
                     check: check + 1,
                 });
+                dispatch({
+                    type: "USERNAME",
+                    name: res.data.name
+                });
             } else {
-                alert("학번이 존재하지 않습니다.");
+                setValues({
+                    ...values,
+                    cite: true
+                });
             }
         }).catch((err) => {
-            setValues({
-                ...values,
-                cite: true
-            });
+            console.log(err);
         });
     }
     const onSubmitHandler = async (e) => {
         e.preventDefault();
         // API POST 나중에 다시 수정
-        await axios.post("http://localhost:4000/api/user/register", {
+        await axios.post("https://ivis.dev/api/user/register", {
             sid: values.studentNumber,
             pw: values.password,
             name: values.name,
@@ -311,15 +314,17 @@ const SignUpForm = ({control}) => {
             type: "NEXT",
             check: check + 1,
         });
+        
     }
     const onSendFormHandler = async (e) => {
         e.preventDefault();
-        await axios.post("http://localhost:4000/api/application", {
+        await axios.post("https://ivis.dev/api/application", {
             intro: answer.q1,
             language: answer.q2,
             project: answer.q3,
             etc: answer.q4,
-        })
+            
+        },{ withCredentials: true })
         .then((res) => {
             console.log(res);
         })
@@ -331,7 +336,7 @@ const SignUpForm = ({control}) => {
     }
     const onResultCheckHandler = async (e) => {
         e.preventDefault();
-        await axios.get("http://localhost:4000/api/application", {
+        await axios.get("https://ivis.dev/api/application", {
             //not params
         })
         .then((res) => {
@@ -459,7 +464,7 @@ const SignUpForm = ({control}) => {
                         {/* MyHome */}
                         {check === 3 && (
                             <>
-                                <Text>MyHome : {values.name} {isSubmit === true ? "[신청 완료]" : "[미신청]"}</Text>
+                                <Text>MyHome : {name} {isSubmit === true ? "[신청 완료]" : "[미신청]"}</Text>
                                 {isSubmit ? null : <Button className="col" onClick={continueHandler}>신청하기</Button>}
                                 {isSubmit ? <Button className="col" onClick={onResultCheckHandler}>신청결과</Button> : null}
                                 <Button className="col" onClick={onCloseHandler}>나가기</Button>
