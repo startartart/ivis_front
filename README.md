@@ -26,6 +26,9 @@
         * 로딩 컴포넌트 작성 필요
         * SignUpForm 컴포넌트를 어디에 재활용할 것인가? -> Services에 하는게 나을 듯
         * 시간부족으로 인해 codePen을 적극 활용하여 디자인을 할 것
+    * 22.02.17 : About, Member Component Update & Services -> Developer Component
+        * [ivis.dev](https://ivis.dev/) front-back server open
+        * Main page 완성할 것
         
 * Install pacakge `npm install ...`
     * `react-router-dom`
