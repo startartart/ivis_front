@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import "./SignUpForm.scss"
+import Loading from "./Loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { useRegisterState, useRegisterDispatch } from "../contexts/RegisterContext";
@@ -208,6 +209,7 @@ const SignUpForm = ({control}) => {
         q3: "",
         q4: ""
     });
+    const [loading, setLoading] = useState(false);
 
     const [passwordCheck, setPasswordCheck] = useState(false);
 
@@ -232,6 +234,7 @@ const SignUpForm = ({control}) => {
 
     // 학번 중복체크 존재하면 로그인 진행, 없으면 회원가입 진행
     const sidCheckHandler = async () => {
+        setLoading(true);
         await axios.post("https://ivis.dev/api/user/sidcheck", {
             sid: values.studentNumber
         },{withCredentials: true}
@@ -254,6 +257,7 @@ const SignUpForm = ({control}) => {
         }).catch((err) => {
             console.log(err);
         });
+        setLoading(false);
     }
     // 비밀번호 체크, 8자리 이상, 비밀번호와 비밀번호 확인이 같은지 체크
     const pwCheckHandler = async () => {
@@ -271,12 +275,12 @@ const SignUpForm = ({control}) => {
             });
             return;
         }
+        setLoading(true);
         await axios.post("https://ivis.dev/api/user/pwcheck", {
             sid: values.studentNumber,
             pw: values.password,
         },{withCredentials: true}
         ).then((res) => {
-            console.log(res);
             if (res.data.result === true) {
                 dispatch({
                     type: "NEXT",
@@ -287,6 +291,9 @@ const SignUpForm = ({control}) => {
                     name: res.data.name,
                     isSubmit: res.data.apply
                 });
+                // 로컬스토리지에 쿠키와 이름 저장
+                localStorage.setItem("name", res.data.name);
+
             } else {
                 setValues({
                     ...values,
@@ -296,10 +303,11 @@ const SignUpForm = ({control}) => {
         }).catch((err) => {
             console.log(err);
         });
+        setLoading(false);
     }
     const onSubmitHandler = async (e) => {
         e.preventDefault();
-        // API POST 나중에 다시 수정
+        setLoading(true);
         await axios.post("https://ivis.dev/api/user/register", {
             sid: values.studentNumber,
             pw: values.password,
@@ -312,6 +320,7 @@ const SignUpForm = ({control}) => {
         .catch((err) => {
             console.log(err);
         });
+        setLoading(false);
         await dispatch({
             type: "NEXT",
             check: check + 1,
@@ -320,6 +329,7 @@ const SignUpForm = ({control}) => {
     }
     const onSendFormHandler = async (e) => {
         e.preventDefault();
+        setLoading(true);
         const languageArray = answer.q2.split(',');
         console.log(languageArray);
         await axios.post("https://ivis.dev/api/application", {
@@ -335,23 +345,25 @@ const SignUpForm = ({control}) => {
         .catch((err) => {
             console.log(err);
         });
+        setLoading(false);
         await dispatch({ type: 'SUBMIT' });
-        await dispatch({ type: 'MYHOME' });
     }
     const onResultCheckHandler = async (e) => {
         e.preventDefault();
-        await axios.get("https://ivis.dev/api/application", {
-            //not params
-        })
-        .then((res) => {
-            console.log(res);
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+        // await axios.get("https://ivis.dev/api/application", {
+        //     //not params
+        // })
+        // .then((res) => {
+        //     console.log(res);
+        // })
+        // .catch((err) => {
+        //     console.log(err);
+        // });
+        dispatch({ type: 'RESULT' });
     }
     const onSendLogoutHandler = async (e) => {
         e.preventDefault();
+        setLoading(true);
         await axios.get("https://ivis.dev/api/user/logout", {
             //not params
         })
@@ -361,6 +373,7 @@ const SignUpForm = ({control}) => {
         .catch((err) => {
             console.log(err);
         });
+        setLoading(false);
         dispatch({ type: 'CLEAR' });
     }
 
@@ -390,11 +403,8 @@ const SignUpForm = ({control}) => {
                 check: check + 1,
             });
         }
-    }; 
-    const onMoveMyHomeHandler = (e) => {
-        e.preventDefault();
-        dispatch({ type: 'MYHOME' });
-    }
+    };
+
     const onPrevHandler = (e) => {
         e.preventDefault();
         dispatch({ type: 'PREV' });
@@ -409,6 +419,7 @@ const SignUpForm = ({control}) => {
         dispatch({ 
             type: 'CLOSE',
             name: values.name,
+            login: true
         });
     }
 
@@ -673,13 +684,19 @@ const SignUpForm = ({control}) => {
                         {check === 14 && (
                             <>
                                 <Text>회원가입이 완료되었습니다. </Text>
-                                <Text>신청서 필요정보를 등록해주세요.</Text>
-                                <Text>로그인 페이지로 이동합니다.</Text>
-                                <Button className="col" onClick={onMoveMyHomeHandler}>이동하기</Button>
+                                <Button className="col" onClick={onCloseHandler}>닫기</Button>
+                            </>
+                        )}
+                        {check === 15 && (
+                            <>
+                                <Text>결과가 공지되지 않았습니다. </Text>
                                 <Button className="col" onClick={onCloseHandler}>닫기</Button>
                             </>
                         )}
                     </>
+                )}
+                {loading && (
+                    <Loading />
                 )}
             </SignUpFormFragment>
         </>
