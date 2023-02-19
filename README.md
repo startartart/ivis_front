@@ -32,6 +32,9 @@
     * 22.02.18 : Member Component Update & SignUpForm HTTP request udpate
         * 추가 결과확인 컴포넌트를 짤 것
         * 기타 수정사항 및 버그 최종확인 해야함
+    * 22.02.19 : IVIS Service open, component styling & debugging test
+        * 각종 버그 테스트 (쿠키처리, status 처리, 반응형 처리)
+        * reducer,dispatch 정리가 필요함
         
 * Install pacakge `npm install ...`
     * `react-router-dom`
