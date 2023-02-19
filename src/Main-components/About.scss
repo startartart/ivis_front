@@ -42,6 +42,11 @@
         width: 40rem;
         height: 50rem;
     }
+
+    @media (max-height: 800px) {
+        width: 20rem;
+        height: 25rem;
+    }
 }
 
 .book-cover {

@@ -6,6 +6,7 @@ const MainForm = () => {
     return (
         <>
             <div className="main-form">
+            <div className='main-intro'>모바일 세로모드, chorme 엔진에 최적화된 환경입니다.</div>
                 <div className="clouds">
                     <div className="cloud x1"></div>
                     <div className="cloud x2"></div>
@@ -18,6 +19,8 @@ const MainForm = () => {
                 <div className="frame-front"></div>
                 <div className="frame-back">
                     <p>Hello, IVIS</p>
+                    <p>I . Information</p>
+                    <p>VIS . Visualization</p>
                 </div>
             </div>
             <div className="main-text">

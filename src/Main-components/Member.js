@@ -26,12 +26,12 @@ const members = [
         name: "김상범",
         grade: "4학년",
         phone: "010-5125-2912",
-        email: "-",
-        language: "-",
+        email: "picel@ivis.dev ",
+        language: "Go, Dart, Python, Ruby",
         links: [
             {
                 name: "github",
-                link: ""
+                link: "https://GitHub.com/picel"
             },
             {
                 name: "instagram",
@@ -43,12 +43,12 @@ const members = [
         name: "김은지",
         grade: "4학년",
         phone: "010-9254-6292",
-        email: "-",
-        language: "-",
+        email: "euni62@ivis.dev",
+        language: "C, Python, JavaScript",
         links: [
             {
                 name: "github",
-                link: ""
+                link: "https://github.com/ZJi62"
             },
             {
                 name: "instagram",
@@ -60,12 +60,12 @@ const members = [
         name: "마승욱",
         grade: "3학년",
         phone: "010-8253-9918",
-        email: "-",
-        language: "-",
+        email: "msu2020@naver.com",
+        language: "C, Python, JavaScript, Java",
         links: [
             {
                 name: "github",
-                link: ""
+                link: "https://github.com/MaiBoii"
             },
             {
                 name: "instagram",
@@ -77,16 +77,16 @@ const members = [
         name: "임동균",
         grade: "3학년",
         phone: "010-3170-9934",
-        email: "-",
-        language: "-",
+        email: "eleven1000@ivis.dev",
+        language: "C, Python, JavaScript, PHP, SQL",
         links: [
             {
                 name: "github",
-                link: ""
+                link: "https://github.com/AceDKLim"
             },
             {
                 name: "instagram",
-                link: ""
+                link: "https://instagram.com/ace_dk_lim?igshid=ZDdkNTZiNTM="
             }
         ]
     },
@@ -132,7 +132,8 @@ const Member = () => {
                 <hr/>
                 <div className="member-icon-list">
                 <a className="member-icon" href={members[index].links[0].link}><FontAwesomeIcon icon={faGithub} /></a>
-                <a className="member-icon" href={members[index].links[1].link}><FontAwesomeIcon icon={faInstagram} /></a>
+                {members[index].links[1].link === "" ? "" : <a className="member-icon" href={members[index].links[1].link}><FontAwesomeIcon icon={faInstagram} /></a>}
+                
                 </div>
             </div>
         </div>

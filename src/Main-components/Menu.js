@@ -153,8 +153,8 @@ function Menu() {
             </ItemLink>
           </li>
           <li>
-            <ItemLink onClick={handleClick} to="/main/developer">
-              Developer
+            <ItemLink onClick={handleClick} to="/main/notice">
+              Notice
             </ItemLink>
           </li>
         </List>

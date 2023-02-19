@@ -1,0 +1,52 @@
+.notice-show-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    p {
+        margin: 0.3rem;
+    }
+}
+
+.notice-scroll-container {
+    border-radius: 5px;
+    height: 100px;
+    overflow: hidden;
+
+    .notice-scroll-contents {
+        text-align: center;
+
+        position: relative;
+        top: -100%;
+        left: 0;
+        
+        -moz-animation: my-animation 19s linear infinite;
+        -webkit-animation: my-animation 19s linear infinite;
+        animation: my-animation 19s linear infinite;
+    }
+}
+
+@-moz-keyframes my-animation {
+    from { -moz-transform: translateY(100%); }
+    to { -moz-transform: translateY(-100%); }
+  }
+  
+  /* for Chrome */
+  @-webkit-keyframes my-animation {
+    from { -webkit-transform: translateY(100%); }
+    to { -webkit-transform: translateY(-100%); }
+  }
+  
+  @keyframes my-animation {
+    from {
+      -moz-transform: translateY(100%);
+      -webkit-transform: translateY(100%);
+      transform: translateY(100%);
+    }
+    to {
+      -moz-transform: translateY(-100%);
+      -webkit-transform: translateY(-100%);
+      transform: translateY(-100%);
+    }
+  }
