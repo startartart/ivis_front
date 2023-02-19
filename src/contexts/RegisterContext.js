@@ -9,6 +9,7 @@ const initialRegisterState = {
     check : 0,
     show : false,
     isSubmit : false,
+    login : false,
     error : null
 };
 
@@ -49,6 +50,17 @@ function registerReducer(state, action) {
                 passwordCheck : '',
                 check : 3,
                 show : false,
+                login : action.login,
+                error : null
+            };
+        case 'LOGIN':
+            return {
+                ...state,
+                login : true,
+                name : action.name,
+                isSubmit : action.isSubmit,
+                show : true,
+                check : 3,
                 error : null
             };
         case 'CLEAR':
@@ -61,12 +73,19 @@ function registerReducer(state, action) {
                 passwordCheck : '',
                 check : 0,
                 show : false,
+                login: false,
                 error : null
             };
+        case 'RESULT':
+            return {
+                ...state,
+                check : 15
+            }
         case 'SUBMIT':
             return {
                 ...state,
-                isSubmit : true
+                isSubmit : true,
+                check : 3
             };
         case 'CHECK':
             return {
