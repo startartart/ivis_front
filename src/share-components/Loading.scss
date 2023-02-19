@@ -1,0 +1,8 @@
+.loading-container {
+    position: fixed;
+
+    //정중앙으로
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
