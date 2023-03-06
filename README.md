@@ -6,35 +6,39 @@
 ---
 
 * Update Profile
-    * 22.01.31 : front design first update
-    * 22.02.01 : pages(Welcome) component
-    * 22.02.02 : SignUpForm Component - 4 levels (name, phone ...) information input
+    * 23.01.31 : front design first update
+    * 23.02.01 : pages(Welcome) component
+    * 23.02.02 : SignUpForm Component - 4 levels (name, phone ...) information input
         * 컴포넌트, 페이지 및 Context를 통한 정리가 필요함
-    * 22.02.03 : SignUpForm Component - Check Info, SimpleGame
-    * 22.02.08 : Rebuilding Component & SignUpForm Component recycle
+    * 23.02.03 : SignUpForm Component - Check Info, SimpleGame
+    * 23.02.08 : Rebuilding Component & SignUpForm Component recycle
         * 향후 Context를 사용한 정리가 필요함
-    * 22.02.09 : Rebuilding Component(Welcome, SignUpForm) & RegisterContext
+    * 23.02.09 : Rebuilding Component(Welcome, SignUpForm) & RegisterContext
         * 컴포넌트 정리 (Main -> App, MainForm -> Main, Welcome 수정 등)
         * 폰트 추가, 로고 삽입, 사용하지 않는 컴포넌트 제거
         * css animation 공부가 필요함
-    * 22.02.15 : SignUpForm Component post, get server
+    * 23.02.15 : SignUpForm Component post, get server
         * 회원가입 -> 로그인 -> 신청서 작성 -> 로그아웃 단계
         * IVIS-API-GUIDE 참고해 req, res 작성 및 받을 것
         * 서버 오픈(02.19 이전 예정)에 따른 웹 프론트 TDD 작성이 필요한가
-    * 22.02.16 : pages(Main) component rebuilding (About, Footer, MainForm, Member, Menu, Services)
+    * 23.02.16 : pages(Main) component rebuilding (About, Footer, MainForm, Member, Menu, Services)
         * 현재 진행 상황 : MainForm, Menu, Footer, 남은 컴포넌트 : About, Member, Services
         * 로딩 컴포넌트 작성 필요
         * SignUpForm 컴포넌트를 어디에 재활용할 것인가? -> Services에 하는게 나을 듯
         * 시간부족으로 인해 codePen을 적극 활용하여 디자인을 할 것
-    * 22.02.17 : About, Member Component Update & Services -> Developer Component
+    * 23.02.17 : About, Member Component Update & Services -> Developer Component
         * [ivis.dev](https://ivis.dev/) front-back server open
         * Main page 완성할 것
-    * 22.02.18 : Member Component Update & SignUpForm HTTP request udpate
+    * 23.02.18 : Member Component Update & SignUpForm HTTP request udpate
         * 추가 결과확인 컴포넌트를 짤 것
         * 기타 수정사항 및 버그 최종확인 해야함
-    * 22.02.19 : IVIS Service open, component styling & debugging test
+    * 23.02.19 : IVIS Service open, component styling & debugging test
         * 각종 버그 테스트 (쿠키처리, status 처리, 반응형 처리)
         * reducer,dispatch 정리가 필요함
+    * 23.02.22 : IVIS Homepage Service Start
+        * 기타 버그나 수정사항 업데이트 할 것
+    * 23.03.06 : IVIS Interview & Admin Page Update
+        * 시간에 따른 신청 양식 제공
         
 * Install pacakge `npm install ...`
     * `react-router-dom`
