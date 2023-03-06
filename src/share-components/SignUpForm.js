@@ -199,7 +199,6 @@ const SignUpForm = ({control}) => {
         studentNumber: "",
         password: "",
         passwordCheck: "",
-        check: check,
         cite: false,
         isSubmit: isSubmit,
     });
@@ -271,7 +270,7 @@ const SignUpForm = ({control}) => {
             }
             dispatch({
                 type: "NEXT",
-                check: check + 1
+                check: check
             });
             return;
         }
@@ -284,16 +283,13 @@ const SignUpForm = ({control}) => {
             if (res.data.result === true) {
                 dispatch({
                     type: "NEXT",
-                    check: check + 1,
+                    check: check,
                 });
                 dispatch({
                     type: "CHECK",
                     name: res.data.name,
                     isSubmit: res.data.apply
                 });
-                // 로컬스토리지에 쿠키와 이름 저장
-                localStorage.setItem("name", res.data.name);
-
             } else {
                 setValues({
                     ...values,
@@ -323,7 +319,7 @@ const SignUpForm = ({control}) => {
         setLoading(false);
         await dispatch({
             type: "NEXT",
-            check: check + 1,
+            check: check,
         });
         
     }
@@ -368,10 +364,10 @@ const SignUpForm = ({control}) => {
             //not params
         })
         .then((res) => {
-            console.log(res);
+            console.log("로그아웃 성공");
         })
         .catch((err) => {
-            console.log(err);
+            console.log("에러발생", err);
         });
         setLoading(false);
         dispatch({ type: 'CLEAR' });
@@ -387,7 +383,7 @@ const SignUpForm = ({control}) => {
             } else {
                 dispatch({
                     type: "NEXT",
-                    check: check + 1,
+                    check: check,
                 });
             }
         }
@@ -400,7 +396,7 @@ const SignUpForm = ({control}) => {
         } else {
             dispatch({
                 type: "NEXT",
-                check: check + 1,
+                check: check,
             });
         }
     };
@@ -683,8 +679,9 @@ const SignUpForm = ({control}) => {
                         )}
                         {check === 14 && (
                             <>
-                                <Text>회원가입이 완료되었습니다. </Text>
-                                <Button className="col" onClick={onCloseHandler}>닫기</Button>
+                                <Text>회원가입이 완료되었습니다.</Text>
+                                <Text>다시 로그인하여 신청서를 작성해주세요!</Text>
+                                <Button className="col" onClick={onClearHandler}>닫기</Button>
                             </>
                         )}
                         {check === 15 && (

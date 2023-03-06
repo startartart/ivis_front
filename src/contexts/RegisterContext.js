@@ -18,7 +18,7 @@ function registerReducer(state, action) {
         case 'TOGGLE_FORM':
             return {
                 ...state,
-                show : !state.show
+                show : !state.show,
             };
         case 'REGISTER':
             return {

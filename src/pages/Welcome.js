@@ -105,12 +105,14 @@ const Welcome = () => {
                     login: true,
                     isSubmit: res.data.applied
                 });
+                console.log("로그인이 되어있음");
             } else {
                 dispatch({ type: 'TOGGLE_FORM' });
+                console.log("로그인이 되어있지 않음");
             }
         })
         .catch(err => {
-            console.log(err);
+            console.log("err : ", err);
         })
     }
 
