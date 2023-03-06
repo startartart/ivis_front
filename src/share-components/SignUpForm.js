@@ -412,14 +412,20 @@ const SignUpForm = ({control}) => {
         },{ withCredentials: true })
         .then((res) => {
             console.log(res);
-            dispatch({ type: 'NEXT' });
+            if (res.data.result === true) {
+                dispatch({ type: 'NEXT' });
+                console.log("인터뷰 예약 성공");
+            } else {
+                dispatch({ type: 'INTERVIEW'});
+                console.log("인터뷰 예약 실패");
+                alert("동시접속 에러! 다시 시도해주세요");
+            }
         })
         .catch((err) => {
             dispatch({ type: 'ERROR' });
         });
         setLoading(false);
     }
-
     // 이외 dispatch 함수
     const continueEnterHandler = async (e) => {
         if (e.key === "Enter") {
