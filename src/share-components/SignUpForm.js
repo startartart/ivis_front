@@ -66,7 +66,7 @@ const Text = styled.p`
 const ButtonBox = styled.div`
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: space-around;
 `;
 
 const Button = styled.button`
@@ -80,6 +80,7 @@ const Button = styled.button`
     transition: all 0.2s;
     cursor: pointer;
     white-space:nowrap;
+    align-self: center;
 
     &:hover {
         box-shadow: 0.4rem 0.4rem 0 black;
@@ -192,6 +193,7 @@ const InputBox = styled.div`
 `;
 
 const SignUpForm = ({control}) => {
+    // const local = "http://localhost:3333/";
     const { check, name, isSubmit } = useRegisterState();
     const [values, setValues] = useState({
         name: name,
@@ -201,6 +203,8 @@ const SignUpForm = ({control}) => {
         passwordCheck: "",
         cite: false,
         isSubmit: isSubmit,
+        day: "",
+        time: "",
     });
     const [answer, setAnswer] = useState({
         q1: "",
@@ -208,6 +212,14 @@ const SignUpForm = ({control}) => {
         q3: "",
         q4: ""
     });
+
+    const [days, setDays] = useState({
+        "check": false,
+        "sat": [],
+        "sun": [],
+    }
+    );
+
     const [loading, setLoading] = useState(false);
 
     const [passwordCheck, setPasswordCheck] = useState(false);
@@ -346,16 +358,35 @@ const SignUpForm = ({control}) => {
     }
     const onResultCheckHandler = async (e) => {
         e.preventDefault();
-        // await axios.get("https://ivis.dev/api/application", {
-        //     //not params
-        // })
-        // .then((res) => {
-        //     console.log(res);
-        // })
-        // .catch((err) => {
-        //     console.log(err);
-        // });
-        dispatch({ type: 'RESULT' });
+        await axios.get("https://ivis.dev/api/interview", {
+            //not params
+        })
+        .then((res) => {
+            console.log("res => ", res);
+            console.log("res.data.result.check => ", res.data.result.check);
+            console.log("res.data.result => ", res.data.result);
+            if (res.data.result.check === true) {
+                console.log("1");
+                dispatch({ type: 'RESULT' });
+                setValues({
+                    ...values,
+                    day: res.data.result.day,
+                    time: res.data.result.time,
+                }); 
+            } else {
+                console.log("2");
+                dispatch({ type: 'INTERVIEW' });
+                setDays({
+                    ...days,
+                    sat: res.data.result.sat,
+                    sun: res.data.result.sun
+                });
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+        console.log("3");
     }
     const onSendLogoutHandler = async (e) => {
         e.preventDefault();
@@ -371,6 +402,22 @@ const SignUpForm = ({control}) => {
         });
         setLoading(false);
         dispatch({ type: 'CLEAR' });
+    }
+    const InterviewHandler = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        await axios.post("https://ivis.dev/api/interview", {
+            day: values.day,
+            time: values.time,
+        },{ withCredentials: true })
+        .then((res) => {
+            console.log(res);
+            dispatch({ type: 'NEXT' });
+        })
+        .catch((err) => {
+            dispatch({ type: 'ERROR' });
+        });
+        setLoading(false);
     }
 
     // 이외 dispatch 함수
@@ -400,6 +447,10 @@ const SignUpForm = ({control}) => {
             });
         }
     };
+    const onMyHomeMove = (e) => {
+        e.preventDefault();
+        dispatch({ type: 'GOHOME' });
+    }
 
     const onPrevHandler = (e) => {
         e.preventDefault();
@@ -417,6 +468,23 @@ const SignUpForm = ({control}) => {
             name: values.name,
             login: true
         });
+    }
+    const onContinueSelect = (d) => {
+        console.log(d);
+        setValues({
+            ...values,
+            day: d
+        });
+        dispatch({ type: 'NEXT' });
+    }
+
+    const onSelectDaysHandler = (t) => {
+        console.log(t);
+        setValues({
+            ...values,
+            time: t
+        });
+        dispatch({ type: 'NEXT' });
     }
 
     //비밀번호 확인 이벤트
@@ -491,7 +559,7 @@ const SignUpForm = ({control}) => {
                             <>
                                 <Text>MyHome : {name} {isSubmit === true ? "[신청 완료]" : "[미신청]"}</Text>
                                 {isSubmit === true ? null : <Button className="col" onClick={continueHandler}>신청하기</Button>}
-                                {isSubmit === true ? <Button className="col" onClick={onResultCheckHandler}>신청결과</Button> : null}
+                                {isSubmit === true ? <Button className="col" onClick={onResultCheckHandler}>면접 날짜 선택 / 확인</Button> : null}
                                 <Button className="col" onClick={onCloseHandler}>나가기</Button>
                                 <Button className="col" onClick={onSendLogoutHandler}>로그아웃</Button>
                             </>
@@ -672,8 +740,8 @@ const SignUpForm = ({control}) => {
                             <Text>학번: {values.studentNumber}</Text>
                             <Text onMouseOver={handleCheckPasswordOver} onMouseLeave={handleCheckPasswordLeave}>비밀번호(확인): {passwordCheck ? values.password : values.password.replace(/./g, "*")}</Text>
                             <ButtonBox>
-                                <Button className="row" onClick={onSubmitHandler}>YES</Button>
                                 <Button className="row" onClick={onClearHandler}>NO</Button>
+                                <Button className="row" onClick={onSubmitHandler}>YES</Button>
                             </ButtonBox>
                         </>
                         )}
@@ -681,13 +749,71 @@ const SignUpForm = ({control}) => {
                             <>
                                 <Text>회원가입이 완료되었습니다.</Text>
                                 <Text>다시 로그인하여 신청서를 작성해주세요!</Text>
-                                <Button className="col" onClick={onClearHandler}>닫기</Button>
+                                <Button className="col" onClick={onClearHandler}>CLSOE</Button>
                             </>
                         )}
                         {check === 15 && (
                             <>
-                                <Text>결과가 공지되지 않았습니다. </Text>
-                                <Button className="col" onClick={onCloseHandler}>닫기</Button>
+                                <Text>면접 날짜는 3월 11일 혹은 12일로 지정된 시간에 맞춰 오셔야 되며, 날짜 변경은 신청 후 불가능합니다.</Text>
+                                <ButtonBox>
+                                <Button className="row" onClick={() => onContinueSelect("sat")}>3/11(토)</Button>
+                                <Button className="row" onClick={() => onContinueSelect("sun")}>3/12(일)</Button>
+                                </ButtonBox>
+
+                                <Text>해당 시간에 오지 못하시는 경우, 다음 휴대전화로 문의바랍니다.</Text>
+                                <Text>kakao : 010-8353-2755</Text>
+                                <Button className="col" onClick={onMyHomeMove}>PREV</Button>
+                            </>
+                        )}
+                        {check === 16 && (
+                            <>
+                                {values.day === "sat" &&
+                                <>
+                                <Text>3월 11일 토요일 (시간 / 선택 클릭)</Text>
+                                <div className="grid-box">
+                                    {days.sat.map((index) => (
+                                        index.reserved === false 
+                                        ? <button onClick={() => onSelectDaysHandler(index.time)}><p>{index.time}</p></button>
+                                        : null
+                                    ))}
+                                </div>
+                                </>
+                                }
+
+                                {values.day === "sun" && (
+                                    <>
+                                    <Text>3월 12일 일요일 (시간 / 선택 클릭)</Text>
+                                    <div className="grid-box">
+                                        {days.sun.map((index) => (
+                                             index.reserved === false 
+                                            ? <button onClick={() => onSelectDaysHandler(index.time)}><p>{index.time}</p></button>
+                                            : null
+                                        ))}
+                                    </div>
+                                </>
+                                )}
+                                <Button className="col" onClick={onPrevHandler}>PREV</Button>
+                            </>
+                        )}
+                        {check === 17 && (
+                            <>
+                                <Text>선택한 날짜와 시간이 맞는지 확인해주세요. 선택한 날짜와 시간은 수정이 불가능합니다.</Text>
+                                <Text>이름: {values.name}</Text>
+                                <Text>면접날짜: {values.day === "sat" ? "3/11 토요일" : "3/12 일요일"}</Text>
+                                <Text>면접시간: {values.time}</Text>
+                                <ButtonBox>
+                                    <Button className="row" onClick={onPrevHandler}>PREV</Button>
+                                    <Button className="row" onClick={InterviewHandler}>SEND</Button>
+                                </ButtonBox>
+                            </>
+                        )}
+                        {check === 18 && (
+                            <>
+                                <Text>면접 신청이 완료되었습니다.</Text>
+                                <Text>면접 날짜와 시간에 맞게 오셔야 되며, 신청한 시간은 개인 매세지로 다시 알려드립니다.</Text>
+                                <Text>면접 날짜: {values.day === "sat" ? "3/11 토요일" : "3/12 일요일"}</Text>
+                                <Text>면접 시간: {values.time}</Text>
+                                <Button className="col" onClick={onCloseHandler}>CLOSE</Button>
                             </>
                         )}
                     </>

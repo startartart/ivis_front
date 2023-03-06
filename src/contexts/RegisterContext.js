@@ -79,7 +79,7 @@ function registerReducer(state, action) {
         case 'RESULT':
             return {
                 ...state,
-                check : 15
+                check : 18
             }
         case 'SUBMIT':
             return {
@@ -93,10 +93,21 @@ function registerReducer(state, action) {
                 name : action.name,
                 isSubmit : action.isSubmit
             };
+        case 'GOHOME':
+            return {
+                ...state,
+                check : 3
+            };
+        
         case 'ERROR':
             return {
                 ...state,
                 error : action.error
+            };
+        case 'INTERVIEW':
+            return {
+                ...state,
+                check : 15
             };
         default:
             throw new Error(`Unhandled action type: ${action.type}`);
